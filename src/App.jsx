@@ -8,16 +8,19 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
-	const [count, setCount] = useState(0);
 	const [artist, setArtist] = useState(null);
+	const [data, setData] = useState(null);
+	const [albums, setAlbums] = useState(null);
 
 	useEffect(() => {
-		axios.get(`${API_URL}/search/artist/tesseract`).then((res) => {
+		axios.get(`${API_URL}/search/artist/tesseract/albums`).then((res) => {
+			setData(res.data);
 			setArtist(res.data.artist);
+			setAlbums(res.data.albums);
 		});
 	}, []);
 
-	console.log(artist);
+	console.log(data);
 
 	if (!artist) {
 		return <div>Loading...</div>;
@@ -25,21 +28,21 @@ function App() {
 		return (
 			<>
 				<div>
-					<h1>{artist.artist}</h1>
-
-					<p>What styles of music do we play?</p>
-
+					<h1>TEST PAGE --- TEST PAGE --- TEST PAGE</h1>
+					<h1>This is the result page for {artist.artist}</h1>
+					<h2>Albums</h2>
 					<ul>
-						{artist.genres.map((genre) => (
-							<li key={genre}>{genre}</li>
+						{albums.map((album) => (
+							<li key={album.releaseDAte}>
+								{album.albumName} with {album.trackCount} tracks
+							</li>
 						))}
 					</ul>
 
-					<p>And those are all our albums (by ID)</p>
-
+					<p>The whole band plays a very distinct style, and the genres are</p>
 					<ul>
-						{artist.album_ids.map((album) => (
-							<li key={album.id}>{album}</li>
+						{artist.genres.map((genre) => (
+							<li key={genre}>{genre}</li>
 						))}
 					</ul>
 				</div>
