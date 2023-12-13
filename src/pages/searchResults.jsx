@@ -1,4 +1,3 @@
-import React from 'react';
 import SearchBar from '../components/searchBar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
