@@ -1,7 +1,7 @@
 import React from 'react';
 
-function editTrack() {
+function EditTrack() {
 	return <div></div>;
 }
 
-export default editTrack;
+export default EditTrack;

@@ -1,7 +1,7 @@
 import React from 'react';
 
-function editArtist() {
+function EditArtist() {
 	return <div></div>;
 }
 
-export default editArtist;
+export default EditArtist;

@@ -1,7 +1,7 @@
 import React from 'react';
 
-function editAlbum() {
+function EditAlbum() {
 	return <div></div>;
 }
 
-export default editAlbum;
+export default EditAlbum;
