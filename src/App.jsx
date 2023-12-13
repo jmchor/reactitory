@@ -4,51 +4,33 @@ import viteLogo from '/vite.svg';
 import './App.css';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Navbar from './components/Navbar';
+import NewRecord from './pages/NewRecord';
+import EditArtist from './pages/editPages/EditArtist';
+import EditAlbum from './pages/editPages/EditAlbum';
+import EditTrack from './pages/editPages/EditTrack';
+import SearchResults from './pages/SearchResults';
+import AlterRecords from './pages/AlterRecords';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-function App() {
-	const [artist, setArtist] = useState(null);
-	const [data, setData] = useState(null);
-	const [albums, setAlbums] = useState(null);
-
-	useEffect(() => {
-		axios.get(`${API_URL}/search/artist/tesseract/albums`).then((res) => {
-			setData(res.data);
-			setArtist(res.data.artist);
-			setAlbums(res.data.albums);
-		});
-	}, []);
-
-	console.log(data);
-
-	if (!artist) {
-		return <div>Loading...</div>;
-	} else {
-		return (
-			<>
-				<div>
-					<h1>TEST PAGE --- TEST PAGE --- TEST PAGE</h1>
-					<h1>This is the result page for {artist.artist}</h1>
-					<h2>Albums</h2>
-					<ul>
-						{albums.map((album) => (
-							<li key={album.releaseDAte}>
-								{album.albumName} with {album.trackCount} tracks
-							</li>
-						))}
-					</ul>
-
-					<p>The whole band plays a very distinct style, and the genres are</p>
-					<ul>
-						{artist.genres.map((genre) => (
-							<li key={genre}>{genre}</li>
-						))}
-					</ul>
-				</div>
-			</>
-		);
-	}
-}
+const App = () => {
+	return (
+		<div className='App'>
+			<Navbar />
+			<div id='content'>
+				<Routes>
+					<Route path='/' element={<Home />} />
+					<Route path='/new-records' element={<NewRecord />} />
+					<Route path='/alter-records' element={<AlterRecords />} />
+					<Route path='/edit/artist/:id' element={<EditArtist />} />
+					<Route path='/edit/album/:id' element={<EditAlbum />} />
+					<Route path='/edit/track/:id' element={<EditTrack />} />
+					<Route path='/search' element={<SearchResults />} />
+				</Routes>
+			</div>
+		</div>
+	);
+};
 
 export default App;
