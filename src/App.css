@@ -1,7 +1,5 @@
 #root {
-	max-width: 1280px;
 	margin: 0 auto;
-	padding: 2rem;
 	text-align: center;
 }
 
@@ -76,7 +74,7 @@ th,
 td {
 	border: 1px solid #ddd;
 	padding: 8px;
-	text-align: left;
+	text-align: center;
 }
 
 th {
@@ -88,4 +86,110 @@ td img {
 	max-height: 100px;
 	display: block;
 	margin: auto;
+}
+
+#pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+	padding: 10px;
+}
+
+.artist-content {
+	display: flex;
+	gap: 20px;
+}
+
+.albums-table {
+	width: 45vw;
+}
+.table-container {
+	height: 80vh;
+}
+
+.page-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 40vw;
+}
+.artist-image {
+	width: 70%;
+	height: 30vw;
+	object-fit: cover;
+}
+
+.genres-table {
+	list-style: none;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px; /* Adjust the gap between items as needed */
+} /* Add any other styles for each genre item here */
+
+.results {
+	height: 100%;
+}
+
+/* SearchBar.css */
+
+.search-bar-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 600px;
+	margin: 0 auto;
+}
+
+.search-input {
+	width: 80%;
+	padding: 10px;
+	padding-bottom: 11px;
+	height: 100%;
+	border: none;
+	border-bottom: 1px solid #000;
+	border-top: 1px solid #000;
+	border-left: 1px solid #000;
+}
+
+.checkbox-options {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 20px;
+	width: 80%;
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+.checkbox-label {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.checkbox-label input {
+	margin-right: 5px;
+}
+
+.search-button {
+	width: 20%; /* Adjusted to 20% for narrower button */
+	padding: 9px;
+	border-top: 1px solid #000;
+	border-right: 1px solid #000;
+	border-bottom: 1px solid #000;
+	border-radius: 0%;
+	background-color: #e4cf32;
+}
+
+.search-area {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+#album-head {
+	margin-bottom: 0;
 }
