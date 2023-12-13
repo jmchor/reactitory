@@ -11,7 +11,6 @@ function SearchResults() {
 		track: false,
 		genre: false,
 	});
-	const [allGenres, setAllGenres] = useState(false);
 	const [artist, setArtist] = useState({});
 	const [album, setAlbum] = useState({});
 	const [track, setTrack] = useState({});
@@ -28,6 +27,11 @@ function SearchResults() {
 		}
 	};
 
+	const formatReleaseYear = (dateString) => {
+		const year = new Date(dateString).getFullYear();
+		return year;
+	};
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -35,8 +39,6 @@ function SearchResults() {
 
 				if (searchTerm === '' && path === 'genre') {
 					res = await axios.get(`${SERVER}/search/${path}/all`);
-					setAllGenres(true);
-
 					const uniqueGenres = [...new Set(res.data.response)];
 					setGenres(uniqueGenres);
 				} else if (path === 'artist') {
@@ -46,9 +48,9 @@ function SearchResults() {
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
 
 					if (path === 'album') {
-						setAlbum(res.data);
+						setAlbum(res.data.response);
 					} else if (path === 'track') {
-						setTrack(res.data);
+						setTrack(res.data.response);
 					}
 				}
 
@@ -61,6 +63,8 @@ function SearchResults() {
 		fetchData();
 	}, [searchTerm, path]);
 
+	console.log(album);
+
 	if (genres || artist || album || track) {
 		return (
 			<>
@@ -68,8 +72,6 @@ function SearchResults() {
 					<SearchBar onSearch={handleSearch} />
 				</div>
 				<div>
-					<h1>Search Results</h1>
-
 					{path === 'artist' && artist && (
 						<>
 							<h2>Artist</h2>
@@ -87,7 +89,7 @@ function SearchResults() {
 									</thead>
 									<tbody>
 										{artist.albums.map((album) => (
-											<tr key={album.releaseDate}>
+											<tr key={album.albumId}>
 												<td>{album.albumName}</td>
 												<td>
 													<img src={album.image} alt='' style={{ width: '100px', height: '100px' }} />
@@ -115,7 +117,32 @@ function SearchResults() {
 
 					{path === 'album' && album && (
 						<>
-							<h2>Album</h2>
+							<h1>{album.albumname}</h1>
+							<h2>{album.artist}</h2>
+							<h5>Released in {formatReleaseYear(album.releasedate)}</h5>
+							<img src={album.image} alt='' />p<h3>Tracks</h3>
+							{Array.isArray(album.tracklist) && album.tracklist.length > 0 ? (
+								<table>
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Duration</th>
+											<th>Youtube URL</th>
+										</tr>
+									</thead>
+									<tbody>
+										{album.tracklist.map((track) => (
+											<tr key={track.trackId}>
+												<td>{track.track}</td>
+												<td>{track.duration}</td>
+												<td>{track.youtube_url || ' --- '}</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							) : (
+								<p>No tracks available for this album.</p>
+							)}
 						</>
 					)}
 
