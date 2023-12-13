@@ -1,6 +1,7 @@
 import SearchBar from '../components/searchBar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { all } from 'axios';
+import ArtistResult from '../components/ArtistResult';
 const SERVER = import.meta.env.VITE_API_URL;
 
 function SearchResults() {
@@ -15,6 +16,11 @@ function SearchResults() {
 	const [album, setAlbum] = useState({});
 	const [track, setTrack] = useState({});
 	const [genres, setGenres] = useState({});
+	const [currentPage, setCurrentPage] = useState(1);
+	const [currentAlbums, setCurrentAlbums] = useState([]);
+	const [allAlbums, setAllAlbums] = useState([]);
+
+	const itemsPerPage = 4;
 
 	const handleSearch = (searchTerm) => {
 		setSearchTerm(searchTerm.term);
@@ -32,6 +38,8 @@ function SearchResults() {
 		return year;
 	};
 
+	let albumsToDisplay;
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -44,6 +52,8 @@ function SearchResults() {
 				} else if (path === 'artist') {
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}/albums`);
 					setArtist((prevArtist) => res.data.response);
+					setAllAlbums(res.data.response.albums);
+					setCurrentAlbums(res.data.response.albums.slice(0, itemsPerPage));
 				} else {
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
 
@@ -61,96 +71,99 @@ function SearchResults() {
 		};
 
 		fetchData();
-	}, [searchTerm, path]);
+	}, [searchTerm, path]); // Include currentPage in the dependencies array
 
-	console.log(album);
+	const handlePageChange = (pageNumber) => {
+		const indexOfLastItem = pageNumber * itemsPerPage;
+		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+		const albumsToDisplay = allAlbums.slice(indexOfFirstItem, indexOfLastItem);
+
+		setCurrentAlbums(albumsToDisplay);
+		setCurrentPage(pageNumber);
+	};
+
+	const totalPages = Math.ceil(allAlbums.length / itemsPerPage);
 
 	if (genres || artist || album || track) {
 		return (
-			<>
+			<div className='results'>
 				<div>
 					<SearchBar onSearch={handleSearch} />
 				</div>
 				<div>
 					{path === 'artist' && artist && (
-						<>
-							<h2>Artist</h2>
-							<p>{artist.artist}</p>
-							<img src={artist.image} alt='' />
-
-							<h3>Albums</h3>
-							{Array.isArray(artist.albums) && artist.albums.length > 0 ? (
-								<table>
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Image</th>
-										</tr>
-									</thead>
-									<tbody>
-										{artist.albums.map((album) => (
-											<tr key={album.albumId}>
-												<td>{album.albumName}</td>
-												<td>
-													<img src={album.image} alt='' style={{ width: '100px', height: '100px' }} />
-												</td>
-											</tr>
-										))}
-									</tbody>
-								</table>
-							) : (
-								<p>No albums available for this artist.</p>
-							)}
-
-							<p>Genres:</p>
-							{Array.isArray(artist.genres) && artist.genres.length > 0 ? (
-								<ul>
-									{artist.genres.map((genre) => (
-										<li key={genre}>{genre}</li>
-									))}
-								</ul>
-							) : (
-								<p>No genres available for this artist.</p>
-							)}
-						</>
+						<ArtistResult
+							artist={artist}
+							allAlbums={allAlbums}
+							currentAlbums={currentAlbums}
+							totalPages={totalPages}
+							currentPage={currentPage}
+							handlePageChange={handlePageChange}
+						/>
 					)}
 
 					{path === 'album' && album && (
-						<>
-							<h1>{album.albumname}</h1>
-							<h2>{album.artist}</h2>
-							<h5>Released in {formatReleaseYear(album.releasedate)}</h5>
-							<img src={album.image} alt='' />p<h3>Tracks</h3>
-							{Array.isArray(album.tracklist) && album.tracklist.length > 0 ? (
-								<table>
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Duration</th>
-											<th>Youtube URL</th>
-										</tr>
-									</thead>
-									<tbody>
-										{album.tracklist.map((track) => (
-											<tr key={track.trackId}>
-												<td>{track.track}</td>
-												<td>{track.duration}</td>
-												<td>{track.youtube_url || ' --- '}</td>
-											</tr>
-										))}
-									</tbody>
-								</table>
-							) : (
-								<p>No tracks available for this album.</p>
-							)}
-						</>
+						<div className='artist-content'>
+							<>
+								<div className='page-header'>
+									<h1 id='album-head'>{album.albumname}</h1>
+									<h3>{album.artist}</h3>
+									<h5>Released in {formatReleaseYear(album.releasedate)}</h5>
+									<img className='artist-image' src={album.image} alt='' />
+								</div>
+
+								<div className='table-container'>
+									<div className='albums-table'>
+										<h3>Tracks</h3>
+										{Array.isArray(album.tracklist) && album.tracklist.length > 0 ? (
+											<table>
+												<thead>
+													<tr>
+														<th>Name</th>
+														<th>Duration</th>
+														<th>Youtube URL</th>
+													</tr>
+												</thead>
+												<tbody>
+													{album.tracklist.map((track) => (
+														<tr key={track.track_id}>
+															<td>{track.track}</td>
+															<td>{track.duration}</td>
+															<td>{track.youtube_url || ' --- '}</td>
+														</tr>
+													))}
+												</tbody>
+											</table>
+										) : (
+											<p>No tracks available for this album.</p>
+										)}
+									</div>
+								</div>
+							</>
+						</div>
 					)}
 
 					{path === 'track' && track && (
 						<>
-							<h2>Track</h2>
-							<p>{track.name}</p>
-							<p>{track.duration}</p>
+							<h2>{track.track}</h2>
+							<table>
+								<thead>
+									<tr>
+										<th>Album</th>
+										<th>Artist</th>
+										<th>Duration</th>
+										<th>YouTube URL</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>{track.album}</td>
+										<td>{track.artist}</td>
+										<td>{track.duration}</td>
+										<td>{track.youtube_url || '---'}</td>
+									</tr>
+								</tbody>
+							</table>
 						</>
 					)}
 
@@ -177,7 +190,7 @@ function SearchResults() {
 						<p>No results found for your search criteria.</p>
 					)}
 				</div>
-			</>
+			</div>
 		);
 	}
 }
