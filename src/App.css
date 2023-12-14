@@ -54,6 +54,10 @@ body {
 	padding: 0;
 }
 
+.App {
+	width: 100%;
+}
+
 /* Ensure that content doesn't start behind the fixed navbar */
 #content {
 	margin-top: 60px; /* Adjust as needed based on your navbar's height */
@@ -64,10 +68,11 @@ body {
 	width: 100%;
 }
 
-table {
+.albums-table table {
 	width: 100%;
 	border-collapse: collapse;
-	margin-top: 10px;
+	margin-top: -30px;
+	color: #151414;
 }
 
 th,
@@ -75,6 +80,7 @@ td {
 	border: 1px solid #ddd;
 	padding: 8px;
 	text-align: center;
+	background-color: #f2f2f2;
 }
 
 th {
@@ -96,16 +102,60 @@ td img {
 	padding: 10px;
 }
 
+#pagination button {
+	border: none;
+	background-color: #fdfdfd00;
+	outline: none;
+	z-index: 999;
+	font-size: 24px;
+	padding: 0;
+}
+
+#pagination h2 {
+	margin-bottom: 5px;
+	margin-top: 10px;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: white;
+	font-weight: 700;
+	background-color: #242424;
+	background-image: url('/public/grit.png');
+	background-size: 800px;
+	background-position: center;
+	width: 100%;
+}
+
 .artist-content {
 	display: flex;
-	gap: 20px;
+	gap: 10px;
+	padding: 30px;
+	width: 100%;
+	margin-top: -50px;
+}
+
+/* .albums-table {
+	width: 45vw;
+} */
+.table-container {
+	height: 80vh;
+	flex: 1;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
 }
 
 .albums-table {
-	width: 45vw;
-}
-.table-container {
-	height: 80vh;
+	width: 80%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .page-header {
@@ -113,22 +163,48 @@ td img {
 	flex-direction: column;
 	align-items: center;
 	min-width: 40vw;
+	flex: 1;
 }
 .artist-image {
-	width: 70%;
-	height: 30vw;
+	max-width: 70%;
+	height: auto;
 	object-fit: cover;
+	border-radius: 10px;
+	border: 2px solid #151414;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.genres-list {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1;
+}
+
+.genres-list h2 {
+	margin-top: 0;
 }
 
 .genres-table {
 	list-style: none;
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 10px; /* Adjust the gap between items as needed */
-} /* Add any other styles for each genre item here */
-
+	margin-top: -80px;
+	grid-template-columns: repeat(3, minmax(100px, 1fr)); /* Set to 3 columns */
+	gap: 15px;
+	padding: 30px;
+	width: 85%;
+	height: 60%;
+}
 .results {
 	height: 100%;
+}
+
+.genre-item {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 /* SearchBar.css */
@@ -191,5 +267,99 @@ td img {
 }
 
 #album-head {
-	margin-bottom: 0;
+}
+
+div.checkmark {
+	font-size: 24px;
+	color: green;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+	position: relative;
+}
+
+div.crossmark {
+	font-size: 24px;
+	font-weight: 900;
+	color: red;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+	position: relative;
+}
+
+.harddrive {
+	display: flex;
+	gap: 4px;
+	justify-content: center;
+}
+
+.headline-container h1,
+h2,
+h3,
+p {
+	z-index: 999;
+	position: relative;
+	color: #242424;
+}
+
+.headline-container {
+	width: fit-content;
+	height: auto;
+}
+
+.headline-container#album-artist {
+	margin-top: -50px;
+	margin-bottom: -50px;
+}
+.headline-container#track-list {
+	margin-top: 50px;
+}
+
+.tracks-table table {
+	width: 100%;
+	border-collapse: collapse;
+	color: #151414;
+	margin-top: -30px;
+}
+
+.tracks-table {
+	width: 80%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.tracks-table#for-tracks {
+	width: 100%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.track-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.edit-button {
+	border: none;
+	background-color: #fdfdfd00;
+	outline: none;
+	z-index: 999;
+	font-size: 24px;
+	padding: 0;
+}
+
+.message {
+	font-size: 24px;
+	font-weight: 900;
+	color: white;
 }

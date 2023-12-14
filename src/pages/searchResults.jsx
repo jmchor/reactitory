@@ -1,7 +1,9 @@
 import SearchBar from '../components/searchBar';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios, { all } from 'axios';
 import ArtistResult from '../components/ArtistResult';
+import AlbumResult from '../components/AlbumResult';
 const SERVER = import.meta.env.VITE_API_URL;
 
 function SearchResults() {
@@ -20,7 +22,10 @@ function SearchResults() {
 	const [currentAlbums, setCurrentAlbums] = useState([]);
 	const [allAlbums, setAllAlbums] = useState([]);
 
-	const itemsPerPage = 4;
+	const location = useLocation();
+	const { editMessage } = location.state || {};
+
+	const itemsPerPage = 5;
 
 	const handleSearch = (searchTerm) => {
 		setSearchTerm(searchTerm.term);
@@ -37,8 +42,6 @@ function SearchResults() {
 		const year = new Date(dateString).getFullYear();
 		return year;
 	};
-
-	let albumsToDisplay;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -61,6 +64,8 @@ function SearchResults() {
 						setAlbum(res.data.response);
 					} else if (path === 'track') {
 						setTrack(res.data.response);
+					} else if (path === 'genre') {
+						setGenres(res.data.response);
 					}
 				}
 
@@ -72,6 +77,8 @@ function SearchResults() {
 
 		fetchData();
 	}, [searchTerm, path]); // Include currentPage in the dependencies array
+
+	console.log('genre', genres);
 
 	const handlePageChange = (pageNumber) => {
 		const indexOfLastItem = pageNumber * itemsPerPage;
@@ -90,6 +97,9 @@ function SearchResults() {
 				<div>
 					<SearchBar onSearch={handleSearch} />
 				</div>
+
+				{editMessage && <p className='message'>{editMessage}</p>}
+
 				<div>
 					{path === 'artist' && artist && (
 						<ArtistResult
@@ -102,78 +112,81 @@ function SearchResults() {
 						/>
 					)}
 
-					{path === 'album' && album && (
-						<div className='artist-content'>
-							<>
-								<div className='page-header'>
-									<h1 id='album-head'>{album.albumname}</h1>
-									<h3>{album.artist}</h3>
-									<h5>Released in {formatReleaseYear(album.releasedate)}</h5>
-									<img className='artist-image' src={album.image} alt='' />
-								</div>
+					{path === 'album' && album && <AlbumResult album={album} formatReleaseYear={formatReleaseYear} />}
 
-								<div className='table-container'>
-									<div className='albums-table'>
-										<h3>Tracks</h3>
-										{Array.isArray(album.tracklist) && album.tracklist.length > 0 ? (
-											<table>
-												<thead>
-													<tr>
-														<th>Name</th>
-														<th>Duration</th>
-														<th>Youtube URL</th>
-													</tr>
-												</thead>
-												<tbody>
-													{album.tracklist.map((track) => (
-														<tr key={track.track_id}>
-															<td>{track.track}</td>
-															<td>{track.duration}</td>
-															<td>{track.youtube_url || ' --- '}</td>
-														</tr>
-													))}
-												</tbody>
-											</table>
-										) : (
-											<p>No tracks available for this album.</p>
-										)}
-									</div>
-								</div>
-							</>
+					{path === 'track' && track && (
+						<div className='track-container'>
+							<div className='headline-container'>
+								<h2>{track.track}</h2>
+								<div className='backdrop-smaller'></div>
+							</div>
+
+							<div className='tracks-table' id='for-tracks'>
+								<table>
+									<thead>
+										<tr>
+											<th>Album</th>
+											<th>Artist</th>
+											<th>Duration</th>
+											<th>YouTube URL</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>{track.album}</td>
+											<td>{track.artist}</td>
+											<td>{track.duration}</td>
+											<td>{track.youtube_url || '---'}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					)}
 
-					{path === 'track' && track && (
+					{path === 'genre' && genres && searchTerm === '' && (
 						<>
-							<h2>{track.track}</h2>
-							<table>
-								<thead>
-									<tr>
-										<th>Album</th>
-										<th>Artist</th>
-										<th>Duration</th>
-										<th>YouTube URL</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>{track.album}</td>
-										<td>{track.artist}</td>
-										<td>{track.duration}</td>
-										<td>{track.youtube_url || '---'}</td>
-									</tr>
-								</tbody>
-							</table>
+							<div className='headline-container'>
+								<h2>Genres</h2>
+								<div className='backdrop-smaller'></div>
+							</div>
+
+							{Array.isArray(genres) && genres.length > 0 ? (
+								<ul className='genres-table'>
+									{genres.map((genre, index) => (
+										<li key={genre} className='genre-item'>
+											<div className='headline-container'>
+												<p>{genre}</p>
+												<div className='backdrop-genres'></div>
+											</div>
+										</li>
+									))}
+								</ul>
+							) : (
+								<p>
+									{searchTerm} genre
+									{searchTerm.endsWith('s') ? '' : 's'}
+								</p>
+							)}
 						</>
 					)}
 
-					{path === 'genre' && genres && (
+					{path === 'genre' && genres && searchTerm !== '' && (
 						<>
-							<h2>Genre</h2>
+							<div className='headline-container'>
+								<h2>Artists with this Genre</h2>
+								<div className='backdrop-smaller'></div>
+							</div>
+
 							{Array.isArray(genres) && genres.length > 0 ? (
-								<ul>
-									{genres.map((genre) => (
-										<li key={genre}>{genre}</li>
+								<ul className='genres-table'>
+									{genres.map((genre, index) => (
+										<li key={genre.artist_id} className='genre-item'>
+											<div className='headline-container'>
+												<p>{genre.artist}</p>
+												<div className='backdrop-genres'></div>
+											</div>
+										</li>
 									))}
 								</ul>
 							) : (

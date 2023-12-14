@@ -1,20 +1,34 @@
-import { Link } from 'react-router-dom'; // Assuming you are using React Router
+import { Link, useLocation } from 'react-router-dom';
 
 function Navbar() {
+	const location = useLocation();
+
+	const handleRefresh = (pathname) => {
+		// Check if the current location pathname matches the link pathname
+		if (location.pathname === pathname) {
+			// Use window.location.reload() to refresh the current page
+			window.location.reload();
+		}
+	};
+
 	return (
 		<nav>
 			<ul>
 				<li>
-					<Link to='/search'>Search Database</Link>
+					<Link to='/search' onClick={() => handleRefresh('/search')}>
+						Search Database
+					</Link>
 				</li>
 				<li>
-					<Link to='/new-records'>Insert New Records</Link>
+					<Link to='/new-records' onClick={() => handleRefresh('/new-records')}>
+						Insert New Records
+					</Link>
 				</li>
+
 				<li>
-					<Link to='/alter-records'>Alter Record</Link>
-				</li>
-				<li>
-					<Link to='/about'>About</Link>
+					<Link to='/about' onClick={() => handleRefresh('/about')}>
+						About
+					</Link>
 				</li>
 			</ul>
 		</nav>

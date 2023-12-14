@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SearchBar({ onSearch }) {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -8,6 +9,8 @@ function SearchBar({ onSearch }) {
 		searchTrack: false,
 		searchGenre: false,
 	});
+
+	const navigate = useNavigate();
 
 	const handleSearch = () => {
 		// Construct the search query based on the selected checkboxes
@@ -30,6 +33,7 @@ function SearchBar({ onSearch }) {
 			searchTrack: false,
 			searchGenre: false,
 		});
+		navigate('/search/:query');
 	};
 
 	return (

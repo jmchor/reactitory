@@ -6,6 +6,9 @@
 	color-scheme: light dark;
 	color: rgba(255, 255, 255, 0.87);
 	background-color: #242424;
+	background-image: url('/public/grit.png');
+	background-size: 800px;
+	background-position: center;
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -45,15 +48,42 @@ button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-	:root {
-		color: #213547;
-		background-color: #ffffff;
-	}
+/* @media (prefers-color-scheme: light) {
 	a:hover {
 		color: #747bff;
 	}
 	button {
 		background-color: #f9f9f9;
 	}
+} */
+
+.backdrop {
+	padding: 50px;
+	top: -110px;
+	left: -50px;
+}
+
+.backdrop-smaller {
+	padding: 20px;
+	top: -55px;
+	left: -20px;
+}
+
+.backdrop,
+.backdrop-smaller,
+.backdrop-genres {
+	z-index: 100;
+	background-color: #e4cf32;
+	width: 100%;
+	background-size: 500px;
+	transform: skew(-10deg, 0);
+	position: relative;
+	border: 1px solid black;
+	display: flex;
+}
+
+.backdrop-genres {
+	padding: 10px;
+	top: -35px;
+	left: -15px;
 }
