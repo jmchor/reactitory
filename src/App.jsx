@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
@@ -9,8 +9,6 @@ import EditArtist from './pages/editPages/EditArtist';
 import EditAlbum from './pages/editPages/EditAlbum';
 import EditTrack from './pages/editPages/EditTrack';
 import SearchResults from './pages/SearchResults';
-import AlterRecords from './pages/AlterRecords';
-import AlternateResults from './pages/AlternateResults';
 
 const App = () => {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -32,16 +30,20 @@ const App = () => {
 		}
 	};
 
+	const location = useLocation();
+	const isSearchResultsPage =
+		(location.pathname.startsWith('/search/') && location.pathname !== '/search/:query') ||
+		location.pathname === '/new-records';
+
 	return (
 		<div className='App'>
 			<Navbar />
-			<SearchBar onSearch={handleSearch} />
+			{!isSearchResultsPage && <SearchBar onSearch={handleSearch} />}
 
 			<div id='content'>
 				<Routes>
 					<Route path='/' element={<Home />} />
 					<Route path='/new-records' element={<NewRecord />} />
-					<Route path='/alter-records' element={<AlterRecords />} />
 					<Route path='/edit-artist/:id' element={<EditArtist />} />
 					<Route path='/edit-album/:id' element={<EditAlbum />} />
 					<Route path='/edit/track/:id' element={<EditTrack />} />
