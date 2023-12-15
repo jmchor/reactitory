@@ -23,7 +23,6 @@ function ArtistResult({
 		navigate(`/edit-album/${albumid}`, { state: { album } });
 	};
 
-	console.log(currentAlbums);
 	return (
 		<>
 			<div className='container'>
