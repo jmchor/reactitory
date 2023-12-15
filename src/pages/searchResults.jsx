@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ArtistResult from '../components/ArtistResult';
 import AlbumResult from '../components/AlbumResult';
+import AllArtists from '../components/AllArtists';
+
 const SERVER = import.meta.env.VITE_API_URL;
 
 function SearchResults(query) {
@@ -13,6 +15,8 @@ function SearchResults(query) {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [currentAlbums, setCurrentAlbums] = useState([]);
 	const [allAlbums, setAllAlbums] = useState([]);
+	const [allArtists, setAllArtists] = useState([]);
+	const [currentArtists, setCurrentArtists] = useState([]);
 
 	const location = useLocation();
 	const { editMessage } = location.state || {};
@@ -21,23 +25,22 @@ function SearchResults(query) {
 
 	const { searchTerm, path } = query;
 
-	// const handleSearch = (searchTerm) => {
-	// 	setSearchTerm(searchTerm.term);
+	const [modalOpen, setModalOpen] = useState(false);
+	const [selectedImage, setSelectedImage] = useState('');
 
-	// 	// Find the first true option and set the corresponding path property
-	// 	const trueOption = Object.keys(searchTerm.options).find((key) => searchTerm.options[key]);
+	const handleOpenModal = (imageUrl) => {
+		setSelectedImage(imageUrl);
+		setModalOpen(true);
+	};
 
-	// 	if (trueOption) {
-	// 		setPath(trueOption);
-	// 	}
-	// };
+	const handleCloseModal = () => {
+		setModalOpen(false);
+	};
 
 	const formatReleaseYear = (dateString) => {
 		const year = new Date(dateString).getFullYear();
 		return year;
 	};
-
-	console.log(query);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -48,7 +51,11 @@ function SearchResults(query) {
 					res = await axios.get(`${SERVER}/search/${path}/all`);
 					const uniqueGenres = [...new Set(res.data.response)];
 					setGenres(uniqueGenres);
-				} else if (path === 'artist') {
+				} else if (searchTerm === 'all' && path === 'artist') {
+					res = await axios.get(`${SERVER}/search/${path}/all`);
+					setAllArtists((prevArtist) => res.data.response);
+					setCurrentArtists(res.data.response.slice(0, itemsPerPage));
+				} else if (searchTerm !== 'all' && path === 'artist') {
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}/albums`);
 					setArtist((prevArtist) => res.data.response);
 					setAllAlbums(res.data.response.albums);
@@ -85,7 +92,17 @@ function SearchResults(query) {
 		setCurrentPage(pageNumber);
 	};
 
+	const handleArtistPageChange = (pageNumber) => {
+		const indexOfLastItem = pageNumber * itemsPerPage;
+		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+		const artistsToDisplay = allArtists.slice(indexOfFirstItem, indexOfLastItem);
+
+		setCurrentArtists(artistsToDisplay);
+		setCurrentPage(pageNumber);
+	};
+
 	const totalPages = Math.ceil(allAlbums.length / itemsPerPage);
+	const totalArtistPages = Math.ceil(allArtists.length / itemsPerPage);
 
 	if (genres || artist || album || track) {
 		return (
@@ -93,7 +110,7 @@ function SearchResults(query) {
 				{editMessage && <p className='message'>{editMessage}</p>}
 
 				<div>
-					{path === 'artist' && artist && (
+					{path === 'artist' && artist && searchTerm !== 'all' && (
 						<ArtistResult
 							artist={artist}
 							allAlbums={allAlbums}
@@ -101,6 +118,10 @@ function SearchResults(query) {
 							totalPages={totalPages}
 							currentPage={currentPage}
 							handlePageChange={handlePageChange}
+							modalOpen={modalOpen}
+							selectedImage={selectedImage}
+							handleOpenModal={handleOpenModal}
+							handleCloseModal={handleCloseModal}
 						/>
 					)}
 
@@ -188,6 +209,20 @@ function SearchResults(query) {
 								</p>
 							)}
 						</>
+					)}
+
+					{path === 'artist' && allArtists && searchTerm === 'all' && (
+						<AllArtists
+							allArtists={allArtists}
+							currentArtists={currentArtists}
+							totalPages={totalArtistPages}
+							currentPage={currentPage}
+							handlePageChange={handleArtistPageChange}
+							modalOpen={modalOpen}
+							selectedImage={selectedImage}
+							handleOpenModal={handleOpenModal}
+							handleCloseModal={handleCloseModal}
+						/>
 					)}
 
 					{/* Add a case for when no data is available */}
