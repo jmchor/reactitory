@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ArtistResult from '../components/ArtistResult';
 import AlbumResult from '../components/AlbumResult';
@@ -17,11 +17,13 @@ function SearchResults(query) {
 	const [allAlbums, setAllAlbums] = useState([]);
 	const [allArtists, setAllArtists] = useState([]);
 	const [currentArtists, setCurrentArtists] = useState([]);
+	const [errorMessage, setErrorMessage] = useState('');
 
 	const location = useLocation();
 	const { editMessage } = location.state || {};
 
 	const itemsPerPage = 5;
+	const navigate = useNavigate();
 
 	const { searchTerm, path } = query;
 
@@ -53,29 +55,49 @@ function SearchResults(query) {
 					setGenres(uniqueGenres);
 				} else if (searchTerm === 'all' && path === 'artist') {
 					res = await axios.get(`${SERVER}/search/${path}/all`);
+
 					setAllArtists((prevArtist) => res.data.response);
 					setCurrentArtists(res.data.response.slice(0, itemsPerPage));
 				} else if (searchTerm !== 'all' && path === 'artist') {
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}/albums`);
-					setArtist((prevArtist) => res.data.response);
-					setAllAlbums(res.data.response.albums);
-					setCurrentAlbums(res.data.response.albums.slice(0, itemsPerPage));
+					if (res.data.success) {
+						setArtist((prevArtist) => res.data.response);
+						setAllAlbums(res.data.response.albums);
+						setCurrentAlbums(res.data.response.albums.slice(0, itemsPerPage));
+					} else {
+						console.log(res.data.message); // Log the error message
+						// Handle the error state as needed
+						setErrorMessage(res.data.message);
+
+						setTimeout(() => {
+							navigate('/');
+							setErrorMessage('');
+						}, 3000);
+					}
 				} else {
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
 
-					if (path === 'album') {
+					if (path === 'album' && res.data.success) {
 						setAlbum(res.data.response);
-					} else if (path === 'track') {
+					} else if (path === 'track' && res.data.success) {
 						setTrack(res.data.response);
-					} else if (searchTerm === 'all' && path === 'genre') {
+					} else if (searchTerm === 'all' && path === 'genre' && res.data.success) {
 						setGenres(res.data.response);
-					} else if (path === 'genre') {
+					} else if (path === 'genre' && res.data.success) {
 						setGenres(res.data.response);
+					} else {
+						console.log(res.data.message); // Log the error message
+						// Handle the error state as needed
+						setErrorMessage(res.data.message);
+
+						setTimeout(() => {
+							navigate('/');
+							setErrorMessage('');
+						}, 3000);
 					}
 				}
-
-				// Assuming the artist is part of the response
 			} catch (error) {
+				console.log(error.message);
 				console.error(error);
 			}
 		};
@@ -109,127 +131,126 @@ function SearchResults(query) {
 			<div className='results'>
 				{editMessage && <p className='message'>{editMessage}</p>}
 
-				<div>
-					{path === 'artist' && artist && searchTerm !== 'all' && (
-						<ArtistResult
-							artist={artist}
-							allAlbums={allAlbums}
-							currentAlbums={currentAlbums}
-							totalPages={totalPages}
-							currentPage={currentPage}
-							handlePageChange={handlePageChange}
-							modalOpen={modalOpen}
-							selectedImage={selectedImage}
-							handleOpenModal={handleOpenModal}
-							handleCloseModal={handleCloseModal}
-						/>
-					)}
+				{!errorMessage ? (
+					<div>
+						{path === 'artist' && artist && searchTerm !== 'all' && (
+							<ArtistResult
+								artist={artist}
+								allAlbums={allAlbums}
+								currentAlbums={currentAlbums}
+								totalPages={totalPages}
+								currentPage={currentPage}
+								handlePageChange={handlePageChange}
+								modalOpen={modalOpen}
+								selectedImage={selectedImage}
+								handleOpenModal={handleOpenModal}
+								handleCloseModal={handleCloseModal}
+							/>
+						)}
 
-					{path === 'album' && album && <AlbumResult album={album} formatReleaseYear={formatReleaseYear} />}
+						{path === 'album' && album && <AlbumResult album={album} formatReleaseYear={formatReleaseYear} />}
 
-					{path === 'track' && track && (
-						<div className='track-container'>
-							<div className='headline-container'>
-								<h2>{track.track}</h2>
-								<div className='backdrop-smaller'></div>
+						{path === 'track' && track && (
+							<div className='track-container'>
+								<div className='headline-container'>
+									<h2>{track.track}</h2>
+									<div className='backdrop-smaller'></div>
+								</div>
+
+								<div className='tracks-table' id='for-tracks'>
+									<table>
+										<thead>
+											<tr>
+												<th>Album</th>
+												<th>Artist</th>
+												<th>Duration</th>
+												<th>YouTube URL</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>{track.album}</td>
+												<td>{track.artist}</td>
+												<td>{track.duration}</td>
+												<td>{track.youtube_url || '---'}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
+						)}
 
-							<div className='tracks-table' id='for-tracks'>
-								<table>
-									<thead>
-										<tr>
-											<th>Album</th>
-											<th>Artist</th>
-											<th>Duration</th>
-											<th>YouTube URL</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{track.album}</td>
-											<td>{track.artist}</td>
-											<td>{track.duration}</td>
-											<td>{track.youtube_url || '---'}</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					)}
+						{path === 'genre' && genres && searchTerm === 'all' && (
+							<>
+								<div className='headline-container'>
+									<h2>Genres</h2>
+									<div className='backdrop-smaller'></div>
+								</div>
 
-					{path === 'genre' && genres && searchTerm === 'all' && (
-						<>
-							<div className='headline-container'>
-								<h2>Genres</h2>
-								<div className='backdrop-smaller'></div>
-							</div>
+								{Array.isArray(genres) && genres.length > 0 ? (
+									<ul className='genres-table'>
+										{genres.map((genre, index) => (
+											<li key={genre} className='genre-item'>
+												<div className='headline-container'>
+													<p>{genre}</p>
+													<div className='backdrop-genres'></div>
+												</div>
+											</li>
+										))}
+									</ul>
+								) : (
+									<p>
+										{searchTerm} genre
+										{searchTerm.endsWith('s') ? '' : 's'}
+									</p>
+								)}
+							</>
+						)}
 
-							{Array.isArray(genres) && genres.length > 0 ? (
-								<ul className='genres-table'>
-									{genres.map((genre, index) => (
-										<li key={genre} className='genre-item'>
-											<div className='headline-container'>
-												<p>{genre}</p>
-												<div className='backdrop-genres'></div>
-											</div>
-										</li>
-									))}
-								</ul>
-							) : (
-								<p>
-									{searchTerm} genre
-									{searchTerm.endsWith('s') ? '' : 's'}
-								</p>
-							)}
-						</>
-					)}
+						{path === 'genre' && genres && searchTerm !== '' && (
+							<>
+								<div className='headline-container'>
+									<h2>Artists with this Genre</h2>
+									<div className='backdrop-smaller'></div>
+								</div>
 
-					{path === 'genre' && genres && searchTerm !== '' && (
-						<>
-							<div className='headline-container'>
-								<h2>Artists with this Genre</h2>
-								<div className='backdrop-smaller'></div>
-							</div>
+								{Array.isArray(genres) && genres.length > 0 ? (
+									<ul className='genres-table'>
+										{genres.map((genre, index) => (
+											<li key={genre.artist_id} className='genre-item'>
+												<div className='headline-container'>
+													<p>{genre.artist}</p>
+													<div className='backdrop-genres'></div>
+												</div>
+											</li>
+										))}
+									</ul>
+								) : (
+									<p>
+										{searchTerm} genre
+										{searchTerm.endsWith('s') ? '' : 's'}
+									</p>
+								)}
+							</>
+						)}
 
-							{Array.isArray(genres) && genres.length > 0 ? (
-								<ul className='genres-table'>
-									{genres.map((genre, index) => (
-										<li key={genre.artist_id} className='genre-item'>
-											<div className='headline-container'>
-												<p>{genre.artist}</p>
-												<div className='backdrop-genres'></div>
-											</div>
-										</li>
-									))}
-								</ul>
-							) : (
-								<p>
-									{searchTerm} genre
-									{searchTerm.endsWith('s') ? '' : 's'}
-								</p>
-							)}
-						</>
-					)}
-
-					{path === 'artist' && allArtists && searchTerm === 'all' && (
-						<AllArtists
-							allArtists={allArtists}
-							currentArtists={currentArtists}
-							totalPages={totalArtistPages}
-							currentPage={currentPage}
-							handlePageChange={handleArtistPageChange}
-							modalOpen={modalOpen}
-							selectedImage={selectedImage}
-							handleOpenModal={handleOpenModal}
-							handleCloseModal={handleCloseModal}
-						/>
-					)}
-
-					{/* Add a case for when no data is available */}
-					{!artist && !album && !track && (!genres || (Array.isArray(genres) && genres.length === 0)) && (
-						<p>No results found for your search criteria.</p>
-					)}
-				</div>
+						{path === 'artist' && allArtists && searchTerm === 'all' && (
+							<AllArtists
+								allArtists={allArtists}
+								currentArtists={currentArtists}
+								totalPages={totalArtistPages}
+								currentPage={currentPage}
+								handlePageChange={handleArtistPageChange}
+								modalOpen={modalOpen}
+								selectedImage={selectedImage}
+								handleOpenModal={handleOpenModal}
+								handleCloseModal={handleCloseModal}
+							/>
+						)}
+					</div>
+				) : (
+					<div>{errorMessage}</div>
+				)}
 			</div>
 		);
 	}
