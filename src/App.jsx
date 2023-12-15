@@ -46,7 +46,6 @@ const App = () => {
 					<Route path='/edit-album/:id' element={<EditAlbum />} />
 					<Route path='/edit/track/:id' element={<EditTrack />} />
 					<Route path='/search/:query' element={<SearchResults searchTerm={searchTerm} path={path} />} />
-					{/* <Route path='/search/' element={<AlternateResults />} /> */}
 				</Routes>
 			</div>
 		</div>
