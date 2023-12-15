@@ -1,8 +1,41 @@
-# React + Vite
+# Reactitory - the auditory frontend written in React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend magic for the auditory backend magic. Magic all around.
 
-Currently, two official plugins are available:
+<p align="center">
+<img src="public/reactitory.png" alt="the auditory fron page" width="500px"/>
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+
+All of the routes are getting called - and now you have a nice frontend UI for it!
+
+- **Create New Records:** Type in the name of an artist - and auditory does the rest (while you get to enjoy loading spinners!)
+
+- **Alter Records:** Every Artist and Album has the option to edit the database entry
+
+- **Dynamic Search Results:** The component dynamically fetches and displays results based on the user's search query, including artists, albums, tracks, and genres.
+
+- **Pagination:** For lengthy result lists, the component implements pagination to improve user navigation and experience.
+
+- **Modal Display:** When a user clicks on an image in the table, a modal with a larger version of the image is displayed.
+
+## Usage
+
+Put in a search term, select a search option, and see what you get!
+
+## Dependencies
+
+- React
+- Axios
+
+## How to Run
+
+1. Install dependencies: `npm install`
+2. Run the application: `npm start`
+
+## Example
+
+```jsx
+<SearchResults query={{ searchTerm: 'example', path: 'artist' }} />
+```
