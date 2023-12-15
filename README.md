@@ -1,6 +1,6 @@
 # Reactitory - the auditory frontend written in React
 
-This is the frontend magic for the auditory backend magic. Magic all around.
+This is the frontend magic for the [auditory backend magic](https://github.com/jmchor/auditory). Magic all around.
 
 <p align="center">
 <img src="public/reactitory.png" alt="the auditory fron page" width="500px"/>
