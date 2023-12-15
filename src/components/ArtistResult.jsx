@@ -7,8 +7,8 @@ function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPag
 		navigate(`/edit-artist/${artistId}`, { state: { artist } });
 	};
 
-	const handleEditAlbum = (albumId, album) => {
-		navigate(`/edit-album/${albumId}`, { state: { album } });
+	const handleEditAlbum = (albumid, album) => {
+		navigate(`/edit-album/${albumid}`, { state: { album } });
 	};
 
 	return (
@@ -93,7 +93,7 @@ function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPag
 									</thead>
 									<tbody>
 										{currentAlbums.map((album) => (
-											<tr key={album.albumId}>
+											<tr key={album.albumid}>
 												<td>{album.albumName}</td>
 												<td>
 													<img src={album.image} alt='' style={{ width: '100px', height: '100px' }} />
@@ -102,14 +102,14 @@ function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPag
 													{album.harddrive ? (
 														<div className='harddrive'>
 															<div className='checkmark'>&#10003;</div>
-															<button className='edit-button' onClick={() => handleEditAlbum(album.albumId, album)}>
+															<button className='edit-button' onClick={() => handleEditAlbum(album.albumid, album)}>
 																&#9998;
 															</button>
 														</div>
 													) : (
 														<div className='harddrive'>
 															<div className='crossmark'>&#9747;</div>
-															<button className='edit-button' onClick={() => handleEditAlbum(album.albumId, album)}>
+															<button className='edit-button' onClick={() => handleEditAlbum(album.albumid, album)}>
 																&#9998;
 															</button>
 														</div>
