@@ -33,9 +33,3 @@ Put in a search term, select a search option, and see what you get!
 
 1. Install dependencies: `npm install`
 2. Run the application: `npm start`
-
-## Example
-
-```jsx
-<SearchResults query={{ searchTerm: 'example', path: 'artist' }} />
-```
