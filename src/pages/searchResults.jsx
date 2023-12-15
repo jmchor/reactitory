@@ -60,6 +60,8 @@ function SearchResults(query) {
 						setAlbum(res.data.response);
 					} else if (path === 'track') {
 						setTrack(res.data.response);
+					} else if (searchTerm === 'all' && path === 'genre') {
+						setGenres(res.data.response);
 					} else if (path === 'genre') {
 						setGenres(res.data.response);
 					}
@@ -88,10 +90,6 @@ function SearchResults(query) {
 	if (genres || artist || album || track) {
 		return (
 			<div className='results'>
-				{/* <div>
-					<SearchBar onSearch={handleSearch} />
-				</div> */}
-
 				{editMessage && <p className='message'>{editMessage}</p>}
 
 				<div>
@@ -138,7 +136,7 @@ function SearchResults(query) {
 						</div>
 					)}
 
-					{path === 'genre' && genres && searchTerm === '' && (
+					{path === 'genre' && genres && searchTerm === 'all' && (
 						<>
 							<div className='headline-container'>
 								<h2>Genres</h2>
