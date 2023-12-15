@@ -1,6 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
+import Modal from './Modal';
 
-function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPage, handlePageChange }) {
+function ArtistResult({
+	artist,
+	allAlbums,
+	currentAlbums,
+	totalPages,
+	currentPage,
+	handlePageChange,
+	modalOpen,
+	selectedImage,
+	handleCloseModal,
+	handleOpenModal,
+}) {
 	const navigate = useNavigate();
 
 	const handleEditArtist = (artistId) => {
@@ -11,6 +23,7 @@ function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPag
 		navigate(`/edit-album/${albumid}`, { state: { album } });
 	};
 
+	console.log(currentAlbums);
 	return (
 		<>
 			<div className='container'>
@@ -55,7 +68,7 @@ function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPag
 									<li key={genre} className='genre-item'>
 										<div className='headline-container'>
 											<p>{genre}</p>
-											<div className='backdrop-genres'></div>
+											<div className='backdrop-smaller'></div>
 										</div>
 									</li>
 								))}
@@ -96,7 +109,12 @@ function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPag
 											<tr key={album.albumid}>
 												<td>{album.albumName}</td>
 												<td>
-													<img src={album.image} alt='' style={{ width: '100px', height: '100px' }} />
+													<img
+														src={album.image}
+														alt=''
+														style={{ width: '120px', height: '120px', cursor: 'pointer' }}
+														onClick={() => handleOpenModal(album.image)}
+													/>
 												</td>
 												<td>
 													{album.harddrive ? (
@@ -124,6 +142,7 @@ function ArtistResult({ artist, allAlbums, currentAlbums, totalPages, currentPag
 							<p>{allAlbums.length === 0 ? 'No albums available for this artist.' : 'Loading albums...'}</p>
 						)}
 					</div>
+					<Modal isOpen={modalOpen} imageUrl={selectedImage} onClose={handleCloseModal} />
 				</div>
 			</div>
 		</>
