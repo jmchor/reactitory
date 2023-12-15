@@ -41,7 +41,7 @@ function EditArtist() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		submitArtist(editedArtist, artist.artist_id);
-		navigate('/search', { state: { editMessage: message } });
+		navigate(-1, { state: { editMessage: message } });
 	};
 
 	let message;

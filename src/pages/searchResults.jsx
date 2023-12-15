@@ -1,19 +1,11 @@
-import SearchBar from '../components/searchBar';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios, { all } from 'axios';
+import axios from 'axios';
 import ArtistResult from '../components/ArtistResult';
 import AlbumResult from '../components/AlbumResult';
 const SERVER = import.meta.env.VITE_API_URL;
 
-function SearchResults() {
-	const [searchTerm, setSearchTerm] = useState('');
-	const [path, setPath] = useState({
-		album: false,
-		artist: false,
-		track: false,
-		genre: false,
-	});
+function SearchResults(query) {
 	const [artist, setArtist] = useState({});
 	const [album, setAlbum] = useState({});
 	const [track, setTrack] = useState({});
@@ -27,21 +19,25 @@ function SearchResults() {
 
 	const itemsPerPage = 5;
 
-	const handleSearch = (searchTerm) => {
-		setSearchTerm(searchTerm.term);
+	const { searchTerm, path } = query;
 
-		// Find the first true option and set the corresponding path property
-		const trueOption = Object.keys(searchTerm.options).find((key) => searchTerm.options[key]);
+	// const handleSearch = (searchTerm) => {
+	// 	setSearchTerm(searchTerm.term);
 
-		if (trueOption) {
-			setPath(trueOption);
-		}
-	};
+	// 	// Find the first true option and set the corresponding path property
+	// 	const trueOption = Object.keys(searchTerm.options).find((key) => searchTerm.options[key]);
+
+	// 	if (trueOption) {
+	// 		setPath(trueOption);
+	// 	}
+	// };
 
 	const formatReleaseYear = (dateString) => {
 		const year = new Date(dateString).getFullYear();
 		return year;
 	};
+
+	console.log(query);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -78,8 +74,6 @@ function SearchResults() {
 		fetchData();
 	}, [searchTerm, path]); // Include currentPage in the dependencies array
 
-	console.log('genre', genres);
-
 	const handlePageChange = (pageNumber) => {
 		const indexOfLastItem = pageNumber * itemsPerPage;
 		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -94,9 +88,9 @@ function SearchResults() {
 	if (genres || artist || album || track) {
 		return (
 			<div className='results'>
-				<div>
+				{/* <div>
 					<SearchBar onSearch={handleSearch} />
-				</div>
+				</div> */}
 
 				{editMessage && <p className='message'>{editMessage}</p>}
 
