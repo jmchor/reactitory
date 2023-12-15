@@ -74,7 +74,7 @@ function NewRecord() {
 					</div>
 
 					<div className='headline-container'>
-						<h3>Easy! You put in an artist's name, and we'll do the rest!</h3>
+						<h3>You put in an artist's name, and we'll do the rest!</h3>
 						<h4>
 							We'll get their ID and other info, all of their albums (and put all of those in the albums table) as well
 							as ALL the tracks for those albums!
@@ -98,7 +98,7 @@ function NewRecord() {
 						</button>
 					</div>
 
-					{!fetchedResults && (
+					{!fetchedResults && isLoading && (
 						<div className='loading-box'>
 							<RingLoader color='#e4cf32' />
 
