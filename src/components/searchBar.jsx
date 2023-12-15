@@ -33,7 +33,7 @@ function SearchBar({ onSearch }) {
 			searchTrack: false,
 			searchGenre: false,
 		});
-		navigate('/search/:query');
+		navigate(`/search/${searchTerm}`);
 	};
 
 	return (
