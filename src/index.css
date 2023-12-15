@@ -71,9 +71,11 @@ button:focus-visible {
 
 .backdrop,
 .backdrop-smaller,
-.backdrop-genres {
+.backdrop-genres,
+.backdrop-big,
+.backdrop-black {
 	z-index: 100;
-	background-color: #e4cf32;
+	background-color: #fed507;
 	width: 100%;
 	background-size: 500px;
 	transform: skew(-10deg, 0);
@@ -86,4 +88,25 @@ button:focus-visible {
 	padding: 10px;
 	top: -35px;
 	left: -15px;
+}
+
+.backdrop-big {
+	padding: 400px 200px 210px 200px;
+	margin-top: -100px;
+	top: -500px;
+	left: -260px;
+}
+.home-image {
+	max-width: 400px;
+	z-index: 999;
+	width: 40vw;
+}
+
+.backdrop-black {
+	background-color: #242424;
+	height: 60px;
+	width: 400px;
+	z-index: 200;
+	top: -90px;
+	left: -50px;
 }
