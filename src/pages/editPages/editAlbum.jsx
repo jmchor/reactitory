@@ -23,8 +23,8 @@ function EditAlbum() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log(editedAlbum);
-		submitAlbum(editedAlbum, album.albumId);
-		navigate('/search', { state: { editMessage: message } });
+		submitAlbum(editedAlbum, album.albumid);
+		navigate(-1, { state: { editMessage: message } });
 	};
 
 	let message;
@@ -44,19 +44,25 @@ function EditAlbum() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<label>
-				On Harddrive:
-				<input
-					type='checkbox'
-					name='onHarddrive'
-					checked={editedAlbum.onHarddrive || false}
-					onChange={handleCheckboxChange}
-				/>
-			</label>
-
-			<button type='submit'>Save Changes</button>
-		</form>
+		<div className='edit-box'>
+			<h2>
+				Now editing: {album.albumName} {album.albumname}
+			</h2>
+			<form>
+				<label>
+					On Harddrive:
+					<input
+						type='checkbox'
+						name='onHarddrive'
+						checked={editedAlbum.onHarddrive || false}
+						onChange={handleCheckboxChange}
+					/>
+				</label>
+			</form>
+			<button className='search-button' type='submit' onClick={handleSubmit}>
+				Save Changes
+			</button>
+		</div>
 	);
 }
 
