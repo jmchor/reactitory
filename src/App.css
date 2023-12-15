@@ -30,12 +30,12 @@ li {
 	margin-right: 20px;
 }
 
-a {
+nav a {
 	text-decoration: none;
 	color: rgb(0, 0, 0);
 }
 
-a:hover {
+nav a:hover {
 	text-decoration: underline;
 }
 
@@ -62,6 +62,7 @@ body {
 /* Ensure that content doesn't start behind the fixed navbar */
 #content {
 	margin-top: 60px; /* Adjust as needed based on your navbar's height */
+	height: 100%;
 }
 
 /* Styles for making all pages span the whole screen */
@@ -124,7 +125,7 @@ td img {
 	color: white;
 	font-weight: 700;
 	background-color: #242424;
-	background-image: url('/public/grit.png');
+	background-image: url('/grit.png');
 	background-size: 800px;
 	background-position: center;
 	width: 100%;
@@ -206,6 +207,7 @@ td img {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	color: #242424 !important;
 }
 
 /* SearchBar.css */
@@ -223,7 +225,7 @@ td img {
 	width: 80%;
 	padding: 10px;
 	padding-bottom: 11px;
-	height: 100%;
+
 	border: none;
 	border-bottom: 1px solid #000;
 	border-top: 1px solid #000;
@@ -265,6 +267,7 @@ td img {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	gap: 20px;
 }
 
 #album-head {
@@ -301,6 +304,7 @@ div.crossmark {
 .headline-container h1,
 h2,
 h3,
+h4,
 p {
 	z-index: 999;
 	position: relative;
@@ -363,4 +367,66 @@ p {
 	font-size: 24px;
 	font-weight: 900;
 	color: white;
+}
+
+/* New Record */
+
+.new-records {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	height: 100%;
+}
+
+.loading-box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	min-width: 300px;
+	margin-top: 50px;
+	gap: 20px;
+}
+
+.loading-box p {
+	color: white;
+}
+
+/*edit forms*/
+
+.edit-box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	min-width: 300px;
+	margin-top: 50px;
+	gap: 20px;
+	background-color: #515151c9;
+	padding: 50px;
+}
+
+.edit-box h2 {
+	color: white;
+}
+
+.artist-edit-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	min-width: 300px;
+	margin-top: 50px;
+	gap: 20px;
+	color: white;
+	border-color: white;
+}
+
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+	color: white !important;
+}
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+	color: white !important;
 }
