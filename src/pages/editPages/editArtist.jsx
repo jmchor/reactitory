@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 const SERVER = import.meta.env.VITE_API_URL;
+import { TextField, Checkbox, FormControlLabel, InputLabel, Input, Button, Box } from '@mui/material';
 
 function EditArtist() {
 	const location = useLocation();
@@ -62,29 +63,38 @@ function EditArtist() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<label>
-				Artist Name:
-				<input type='text' name='artistName' value={editedArtist.artistName} onChange={handleChange} />
-			</label>
-
-			<label>
-				On Harddrive:
-				<input
-					type='checkbox'
-					name='onHarddrive'
-					checked={editedArtist.onHarddrive || false}
-					onChange={handleCheckboxChange}
+		<div className='edit-box'>
+			<h2>Now editing: {artist.artist}</h2>
+			<form className='artist-edit-form'>
+				<TextField
+					label='Artist Name'
+					type='text'
+					name='artistName'
+					value={editedArtist.artistName}
+					onChange={handleChange}
+					fullWidth
 				/>
-			</label>
 
-			<label>
-				Genres (comma-separated):
-				<input type='text' name='genres' value={editedArtist.genres.join(', ')} onChange={handleGenresChange} />
-			</label>
+				<FormControlLabel
+					control={
+						<Checkbox name='onHarddrive' checked={editedArtist.onHarddrive || false} onChange={handleCheckboxChange} />
+					}
+					label='On Harddrive'
+				/>
 
-			<button type='submit'>Save Changes</button>
-		</form>
+				<TextField
+					label='Genres (comma-separated)'
+					type='text'
+					name='genres'
+					value={editedArtist.genres.join(', ')}
+					onChange={handleGenresChange}
+					fullWidth
+				/>
+			</form>
+			<button className='search-button' type='submit' onClick={handleSubmit}>
+				Save Changes
+			</button>
+		</div>
 	);
 }
 
