@@ -1,4 +1,12 @@
+import { useNavigate } from 'react-router-dom';
+
 function AlbumResult({ album, formatReleaseYear }) {
+	const navigate = useNavigate();
+
+	const handleEditAlbum = (albumId, album) => {
+		navigate(`/edit-album/${albumId}`, { state: { album } });
+	};
+
 	return (
 		<div className='artist-content'>
 			<>
@@ -16,6 +24,9 @@ function AlbumResult({ album, formatReleaseYear }) {
 							<div className='harddrive'>
 								<p>on harddrive</p>
 								<div className='checkmark'>&#10003;</div>
+								<button className='edit-button' onClick={() => handleEditAlbum(album.albumid, album)}>
+									&#9998;
+								</button>
 							</div>
 							<div className='backdrop-genres'></div>
 						</div>
@@ -24,6 +35,9 @@ function AlbumResult({ album, formatReleaseYear }) {
 							<div className='harddrive'>
 								<p>on harddrive</p>
 								<div className='crossmark'>&#9747;</div>
+								<button className='edit-button' onClick={() => handleEditAlbum(album.albumid, album)}>
+									&#9998;
+								</button>
 							</div>
 							<div className='backdrop-genres'></div>
 						</div>
