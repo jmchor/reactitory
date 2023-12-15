@@ -15,8 +15,8 @@ function Navbar() {
 		<nav>
 			<ul>
 				<li>
-					<Link to='/search' onClick={() => handleRefresh('/search')}>
-						Search Database
+					<Link to='/' onClick={() => handleRefresh('/')}>
+						Home
 					</Link>
 				</li>
 				<li>
