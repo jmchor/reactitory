@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function SearchBar({ onSearch }) {
@@ -13,9 +13,12 @@ function SearchBar({ onSearch }) {
 	const navigate = useNavigate();
 
 	const handleSearch = () => {
-		// Construct the search query based on the selected checkboxes
+		// Split the searchTerm by commas
+		const queries = searchTerm.split(',').map((query) => query.trim());
+
+		// Construct the search query based on the selected checkboxes and queries
 		const query = {
-			term: searchTerm,
+			term: queries,
 			options: {
 				album: searchOptions.searchAlbum,
 				artist: searchOptions.searchArtist,
@@ -24,16 +27,18 @@ function SearchBar({ onSearch }) {
 			},
 		};
 
+		console.log(query);
+
 		// Call the onSearch callback with the constructed query
 		onSearch(query);
 		setSearchTerm('');
-		setSearchOptions({
-			searchAlbum: false,
-			searchArtist: false,
-			searchTrack: false,
-			searchGenre: false,
-		});
-		navigate(`/search/${searchTerm}`);
+
+		// Update the URL based on the number of query items
+		if (queries.length === 1) {
+			navigate(`/search/${encodeURIComponent(queries[0])}`);
+		} else if (queries.length > 1) {
+			navigate(`/search/multiple`);
+		}
 	};
 
 	return (
