@@ -133,7 +133,7 @@ function SearchResults(query) {
 		};
 
 		fetchData();
-	}, [searchTerm, path]);
+	}, [searchTerm, path, navigate]);
 
 	const handlePageChange = (pageNumber) => {
 		const indexOfLastItem = pageNumber * itemsPerPage;
