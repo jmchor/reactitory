@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 
 function ArtistResult({
@@ -63,7 +63,7 @@ function ArtistResult({
 						</div>
 						{Array.isArray(artist.genres) && artist.genres.length > 0 ? (
 							<ul className='genres-table'>
-								{artist.genres.map((genre, index) => (
+								{artist.genres.map((genre) => (
 									<li key={genre} className='genre-item'>
 										<div className='headline-container'>
 											<p>{genre}</p>

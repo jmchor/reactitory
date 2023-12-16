@@ -8,7 +8,7 @@ function AllGenres({ genres, searchTerm }) {
 
 			{Array.isArray(genres) && genres.length > 0 ? (
 				<ul className='genres-table'>
-					{genres.map((genre, index) => (
+					{genres.map((genre) => (
 						<li key={genre} className='genre-item'>
 							<div className='headline-container'>
 								<p>{genre}</p>
