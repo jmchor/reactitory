@@ -24,6 +24,10 @@ All of the routes are getting called - and now you have a nice frontend UI for i
 
 Put in a search term, select a search option, and see what you get!
 
+- **Track Search:** Here you NEED to put in the ARTIST, TRACK names. I found that loads of artists share track titles.
+
+- **Album Search:** Here you can choose - just the ALBUM, or ALBUM, ARTIST - if you're not sure if the album name is unique or not.
+
 ## Dependencies
 
 - React
