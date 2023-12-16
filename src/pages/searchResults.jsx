@@ -4,45 +4,40 @@ import axios from 'axios';
 import ArtistResult from '../components/ArtistResult';
 import AlbumResult from '../components/AlbumResult';
 import AllArtists from '../components/AllArtists';
-
+import GenreResults from '../components/GenreResults';
+import AllGenres from '../components/AllGenres';
+import TrackResults from '../components/TrackResults';
 const SERVER = import.meta.env.VITE_API_URL;
 
 function SearchResults(query) {
-	const [artist, setArtist] = useState({});
-	const [album, setAlbum] = useState({});
-	const [track, setTrack] = useState({});
-	const [genres, setGenres] = useState({});
+	const [artistData, setArtistData] = useState({});
+	const [albumData, setAlbumData] = useState({});
+	const [trackData, setTrackData] = useState({});
+	const [genres, setGenres] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [currentAlbums, setCurrentAlbums] = useState([]);
-	const [allAlbums, setAllAlbums] = useState([]);
-	const [allArtists, setAllArtists] = useState([]);
-	const [currentArtists, setCurrentArtists] = useState([]);
+	const [currentItems, setCurrentItems] = useState([]);
+	const [allItems, setAllItems] = useState([]);
 	const [errorMessage, setErrorMessage] = useState('');
+	const [modal, setModal] = useState({ open: false, selectedImage: '' });
 
+	const navigate = useNavigate();
 	const location = useLocation();
 	const { editMessage } = location.state || {};
-
-	const itemsPerPage = 5;
-	const navigate = useNavigate();
-
 	const { searchTerm, path } = query;
 
-	const [modalOpen, setModalOpen] = useState(false);
-	const [selectedImage, setSelectedImage] = useState('');
+	console.log('QUERY', query);
 
 	const handleOpenModal = (imageUrl) => {
-		setSelectedImage(imageUrl);
-		setModalOpen(true);
+		setModal({ open: true, selectedImage: imageUrl });
 	};
 
 	const handleCloseModal = () => {
-		setModalOpen(false);
+		setModal({ open: false, selectedImage: '' });
 	};
 
-	const formatReleaseYear = (dateString) => {
-		const year = new Date(dateString).getFullYear();
-		return year;
-	};
+	const formatReleaseYear = (dateString) => new Date(dateString).getFullYear();
+
+	const itemsPerPage = 5;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -51,22 +46,62 @@ function SearchResults(query) {
 
 				if (searchTerm === '' && path === 'genre') {
 					res = await axios.get(`${SERVER}/search/${path}/all`);
-					const uniqueGenres = [...new Set(res.data.response)];
-					setGenres(uniqueGenres);
-				} else if (searchTerm === 'all' && path === 'artist') {
-					res = await axios.get(`${SERVER}/search/${path}/all`);
+					setGenres([...new Set(res.data.response)]);
+				} else if ((searchTerm === 'all' && path === 'artist') || (searchTerm !== 'all' && path === 'artist')) {
+					res = await axios.get(
+						`${SERVER}/search/${path}/${searchTerm === 'all' ? 'all' : encodeURIComponent(searchTerm)}/albums`
+					);
 
-					setAllArtists((prevArtist) => res.data.response);
-					setCurrentArtists(res.data.response.slice(0, itemsPerPage));
-				} else if (searchTerm !== 'all' && path === 'artist') {
-					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}/albums`);
 					if (res.data.success) {
-						setArtist((prevArtist) => res.data.response);
-						setAllAlbums(res.data.response.albums);
-						setCurrentAlbums(res.data.response.albums.slice(0, itemsPerPage));
+						setArtistData(res.data.response);
+						setAllItems(res.data.response.albums);
+						setCurrentItems(res.data.response.albums.slice(0, itemsPerPage));
 					} else {
-						console.log(res.data.message); // Log the error message
-						// Handle the error state as needed
+						console.log(res.data.message);
+						setErrorMessage(res.data.message);
+
+						setTimeout(() => {
+							navigate('/');
+							setErrorMessage('');
+						}, 3000);
+					}
+				} else if (path === 'track' && searchTerm.length === 2) {
+					// Case where the path is "tracks" and the searchTerm has two items
+					const [query1, query2] = searchTerm;
+
+					res = await axios.get(`${SERVER}/search/${path}`, {
+						params: {
+							query1: encodeURIComponent(query1),
+							query2: encodeURIComponent(query2),
+						},
+					});
+
+					if (res.data.success) {
+						setTrackData(res.data.response);
+					} else {
+						console.log(res.data.message);
+						setErrorMessage(res.data.message);
+
+						setTimeout(() => {
+							navigate('/');
+							setErrorMessage('');
+						}, 3000);
+					}
+				} else if (path === 'album' && searchTerm.length === 2) {
+					// Case where the path is "albums" and the searchTerm has two items
+					const [query1, query2] = searchTerm;
+
+					res = await axios.get(`${SERVER}/search/${path}/with-artist`, {
+						params: {
+							query1: encodeURIComponent(query1),
+							query2: encodeURIComponent(query2),
+						},
+					});
+
+					if (res.data.success) {
+						setAlbumData(res.data.response);
+					} else {
+						console.log(res.data.message);
 						setErrorMessage(res.data.message);
 
 						setTimeout(() => {
@@ -75,19 +110,15 @@ function SearchResults(query) {
 						}, 3000);
 					}
 				} else {
+					console.log('CALLING THIS ROUTE!');
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
 
-					if (path === 'album' && res.data.success) {
-						setAlbum(res.data.response);
-					} else if (path === 'track' && res.data.success) {
-						setTrack(res.data.response);
-					} else if (searchTerm === 'all' && path === 'genre' && res.data.success) {
-						setGenres(res.data.response);
-					} else if (path === 'genre' && res.data.success) {
+					if ((path === 'album' || path === 'track') && res.data.success) {
+						path === 'album' ? setAlbumData(res.data.response) : setTrackData(res.data.response);
+					} else if ((searchTerm === 'all' || path === 'genre') && res.data.success) {
 						setGenres(res.data.response);
 					} else {
-						console.log(res.data.message); // Log the error message
-						// Handle the error state as needed
+						console.log(res.data.message);
 						setErrorMessage(res.data.message);
 
 						setTimeout(() => {
@@ -97,152 +128,67 @@ function SearchResults(query) {
 					}
 				}
 			} catch (error) {
-				console.log(error.message);
-				console.error(error);
+				console.error(error.message);
 			}
 		};
 
 		fetchData();
-	}, [searchTerm, path]); // Include currentPage in the dependencies array
+	}, [searchTerm, path]);
 
 	const handlePageChange = (pageNumber) => {
 		const indexOfLastItem = pageNumber * itemsPerPage;
 		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-		const albumsToDisplay = allAlbums.slice(indexOfFirstItem, indexOfLastItem);
+		const itemsToDisplay = allItems.slice(indexOfFirstItem, indexOfLastItem);
 
-		setCurrentAlbums(albumsToDisplay);
+		setCurrentItems(itemsToDisplay);
 		setCurrentPage(pageNumber);
 	};
 
-	const handleArtistPageChange = (pageNumber) => {
-		const indexOfLastItem = pageNumber * itemsPerPage;
-		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-		const artistsToDisplay = allArtists.slice(indexOfFirstItem, indexOfLastItem);
+	const totalPages = Math.ceil(allItems.length / itemsPerPage);
 
-		setCurrentArtists(artistsToDisplay);
-		setCurrentPage(pageNumber);
-	};
-
-	const totalPages = Math.ceil(allAlbums.length / itemsPerPage);
-	const totalArtistPages = Math.ceil(allArtists.length / itemsPerPage);
-
-	if (genres || artist || album || track) {
+	if (genres || artistData || albumData || trackData) {
 		return (
 			<div className='results'>
 				{editMessage && <p className='message'>{editMessage}</p>}
 
 				{!errorMessage ? (
 					<div>
-						{path === 'artist' && artist && searchTerm !== 'all' && (
+						{path === 'artist' && artistData && searchTerm !== 'all' && (
 							<ArtistResult
-								artist={artist}
-								allAlbums={allAlbums}
-								currentAlbums={currentAlbums}
+								artist={artistData}
+								allAlbums={allItems}
+								currentAlbums={currentItems}
 								totalPages={totalPages}
 								currentPage={currentPage}
 								handlePageChange={handlePageChange}
-								modalOpen={modalOpen}
-								selectedImage={selectedImage}
+								modalOpen={modal.open}
+								selectedImage={modal.selectedImage}
 								handleOpenModal={handleOpenModal}
 								handleCloseModal={handleCloseModal}
 							/>
 						)}
 
-						{path === 'album' && album && <AlbumResult album={album} formatReleaseYear={formatReleaseYear} />}
+						{path === 'album' && albumData && <AlbumResult album={albumData} formatReleaseYear={formatReleaseYear} />}
 
-						{path === 'track' && track && (
-							<div className='track-container'>
-								<div className='headline-container'>
-									<h2>{track.track}</h2>
-									<div className='backdrop-smaller'></div>
-								</div>
-
-								<div className='tracks-table' id='for-tracks'>
-									<table>
-										<thead>
-											<tr>
-												<th>Album</th>
-												<th>Artist</th>
-												<th>Duration</th>
-												<th>YouTube URL</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>{track.album}</td>
-												<td>{track.artist}</td>
-												<td>{track.duration}</td>
-												<td>{track.youtube_url || '---'}</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						)}
+						{path === 'track' && trackData && <TrackResults track={trackData} />}
 
 						{path === 'genre' && genres && searchTerm === 'all' && (
-							<>
-								<div className='headline-container'>
-									<h2>Genres</h2>
-									<div className='backdrop-smaller'></div>
-								</div>
-
-								{Array.isArray(genres) && genres.length > 0 ? (
-									<ul className='genres-table'>
-										{genres.map((genre, index) => (
-											<li key={genre} className='genre-item'>
-												<div className='headline-container'>
-													<p>{genre}</p>
-													<div className='backdrop-genres'></div>
-												</div>
-											</li>
-										))}
-									</ul>
-								) : (
-									<p>
-										{searchTerm} genre
-										{searchTerm.endsWith('s') ? '' : 's'}
-									</p>
-								)}
-							</>
+							<AllGenres genres={genres} searchTerm={searchTerm} />
 						)}
 
 						{path === 'genre' && genres && searchTerm !== '' && (
-							<>
-								<div className='headline-container'>
-									<h2>Artists with this Genre</h2>
-									<div className='backdrop-smaller'></div>
-								</div>
-
-								{Array.isArray(genres) && genres.length > 0 ? (
-									<ul className='genres-table'>
-										{genres.map((genre, index) => (
-											<li key={genre.artist_id} className='genre-item'>
-												<div className='headline-container'>
-													<p>{genre.artist}</p>
-													<div className='backdrop-genres'></div>
-												</div>
-											</li>
-										))}
-									</ul>
-								) : (
-									<p>
-										{searchTerm} genre
-										{searchTerm.endsWith('s') ? '' : 's'}
-									</p>
-								)}
-							</>
+							<GenreResults genres={genres} searchTerm={searchTerm} />
 						)}
 
-						{path === 'artist' && allArtists && searchTerm === 'all' && (
+						{path === 'artist' && allItems && searchTerm === 'all' && (
 							<AllArtists
-								allArtists={allArtists}
-								currentArtists={currentArtists}
-								totalPages={totalArtistPages}
+								allArtists={allItems}
+								currentArtists={currentItems}
+								totalPages={totalPages}
 								currentPage={currentPage}
-								handlePageChange={handleArtistPageChange}
-								modalOpen={modalOpen}
-								selectedImage={selectedImage}
+								handlePageChange={handlePageChange}
+								modalOpen={modal.open}
+								selectedImage={modal.selectedImage}
 								handleOpenModal={handleOpenModal}
 								handleCloseModal={handleCloseModal}
 							/>
