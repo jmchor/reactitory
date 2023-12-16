@@ -41,7 +41,7 @@ function ArtistResult({
 										&#9998;
 									</button>
 								</div>
-								<div className='backdrop-genres'></div>
+								<div className='backdrop-smaller'></div>
 							</div>
 						) : (
 							<div className='headline-container'>
@@ -52,7 +52,7 @@ function ArtistResult({
 										&#9998;
 									</button>
 								</div>
-								<div className='backdrop-genres'></div>
+								<div className='backdrop-smaller'></div>
 							</div>
 						)}
 					</div>
