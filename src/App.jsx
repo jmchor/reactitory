@@ -7,9 +7,9 @@ import NewRecord from './pages/NewRecord';
 
 import SearchResults from './pages/searchResults';
 import SearchBar from './components/SearchBarComponent';
-import EditAlbum from './pages/EditPages/EditAlbum';
-import EditArtist from './pages/EditPages/EditArtist';
-import EditTrack from './pages/EditPages/EditTrack';
+import EditAlbum from './pages/editpages/EditAlbum';
+import EditArtist from './pages/editpages/EditArtist';
+import EditTrack from './pages/editpages/EditTrack';
 
 const App = () => {
 	const [searchTerm, setSearchTerm] = useState('');
