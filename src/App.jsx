@@ -3,12 +3,12 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
-import SearchBar from './components/SearchBar';
 import NewRecord from './pages/NewRecord';
 import EditArtist from './pages/editPages/EditArtist';
 import EditAlbum from './pages/editPages/EditAlbum';
 import EditTrack from './pages/editPages/EditTrack';
 import SearchResults from './pages/searchResults';
+import SearchBar from './components/SearchBar';
 
 const App = () => {
 	const [searchTerm, setSearchTerm] = useState('');
