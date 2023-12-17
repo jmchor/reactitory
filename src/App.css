@@ -224,9 +224,10 @@ td img {
 
 .search-input {
 	width: 80%;
+	margin: 10px;
 	padding: 10px;
 	padding-bottom: 11px;
-
+	font-size: 1.2rem;
 	border: none;
 	border-bottom: 1px solid #000;
 	border-top: 1px solid #000;
@@ -255,7 +256,7 @@ td img {
 
 .search-button {
 	width: 20%; /* Adjusted to 20% for narrower button */
-	padding: 9px;
+	padding: 13px;
 	border-top: 1px solid #000;
 	border-right: 1px solid #000;
 	border-bottom: 1px solid #000;
@@ -481,4 +482,8 @@ nav ul li a {
 .modal-content img {
 	max-width: 600px;
 	max-height: 600px;
+}
+
+.headline-container-home .backdrop-big {
+	padding-left: 290px;
 }
