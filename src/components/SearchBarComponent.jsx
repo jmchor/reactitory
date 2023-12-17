@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Searchbar({ onSearch }) {
+function SearchBar({ onSearch }) {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchOptions, setSearchOptions] = useState({
 		searchAlbum: false,
@@ -103,4 +103,4 @@ function Searchbar({ onSearch }) {
 	);
 }
 
-export default Searchbar;
+export default SearchBar;
