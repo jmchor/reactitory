@@ -6,7 +6,7 @@ import Navbar from './components/Navbar';
 import NewRecord from './pages/NewRecord';
 
 import SearchResults from './pages/searchResults';
-import SearchBar from './components/SearchBar';
+import Searchbar from './components/Searchbar';
 import EditAlbum from './pages/editPages/EditAlbum';
 import EditArtist from './pages/editPages/EditArtist';
 import EditTrack from './pages/editPages/EditTrack';
@@ -39,7 +39,7 @@ const App = () => {
 	return (
 		<div className='App'>
 			<Navbar />
-			{!isSearchResultsPage && <SearchBar onSearch={handleSearch} />}
+			{!isSearchResultsPage && <Searchbar onSearch={handleSearch} />}
 
 			<div id='content'>
 				<Routes>
