@@ -6,15 +6,15 @@ import Navbar from './components/Navbar';
 import NewRecord from './pages/NewRecord';
 
 import SearchResults from './pages/searchResults';
-import SearchBar from './components/SearchBarComponent';
-import EditAlbum from './pages/EditAlbum';
-import EditArtist from './pages/EditArtist';
-import EditTrack from './pages/EditTrack';
+import SearchBar from './components/SearchBarComponent';‚
+import EditAlbum from './pages/editpages/EditAlbum';
+import EditArtist from './pages/editpages/EditArtist';
+import EditTrack from './pages/editpages/EditTrack';
 
 const App = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [path, setPath] = useState({
-		album: false,
+		album: false,‚
 		artist: false,
 		track: false,
 		genre: false,
@@ -23,7 +23,7 @@ const App = () => {
 	const handleSearch = (searchTerm) => {
 		setSearchTerm(searchTerm.term);
 
-		// Find the first true option and set the corresponding path property
+		// Find the first true option and set the corresponding‚ path property
 		const trueOption = Object.keys(searchTerm.options).find((key) => searchTerm.options[key]);
 
 		if (trueOption) {
