@@ -14,7 +14,7 @@ function SearchBar({ onSearch }) {
 
 	const handleSearch = () => {
 		// Split the searchTerm by commas
-		const queries = searchTerm.split(',').map((query) => query.trim());
+		const queries = searchTerm.split('AND').map((query) => query.trim());
 
 		// Construct the search query based on the selected checkboxes and queries
 		const query = {

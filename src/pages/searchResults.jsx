@@ -110,7 +110,6 @@ function SearchResults(query) {
 						}, 3000);
 					}
 				} else {
-					console.log('CALLING THIS ROUTE!');
 					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
 
 					if ((path === 'album' || path === 'track') && res.data.success) {
@@ -134,6 +133,8 @@ function SearchResults(query) {
 
 		fetchData();
 	}, [searchTerm, path, navigate]);
+
+	console.log('ALBUMDATA', albumData);
 
 	const handlePageChange = (pageNumber) => {
 		const indexOfLastItem = pageNumber * itemsPerPage;

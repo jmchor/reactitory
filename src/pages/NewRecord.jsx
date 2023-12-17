@@ -48,9 +48,11 @@ function NewRecord() {
 		if (fetchedResults) {
 			// Redirect to the search page with the provided name
 
-			navigate(`/search/${encodeURIComponent(name)}`);
-			setFetchedResults(false);
-			setIsLoading(false);
+			setTimeout(() => {
+				navigate(`/`);
+				setFetchedResults(false);
+				setIsLoading(false);
+			}, 2000);
 		}
 	}, [fetchedResults, name, navigate]);
 
