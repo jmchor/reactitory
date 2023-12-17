@@ -4,11 +4,12 @@ import { useState } from 'react';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import NewRecord from './pages/NewRecord';
-import EditArtist from './pages/editPages/EditArtist';
-import EditAlbum from './pages/editPages/EditAlbum';
-import EditTrack from './pages/editPages/EditTrack';
+
 import SearchResults from './pages/searchResults';
 import SearchBar from './components/SearchBar';
+import EditAlbum from './pages/editPages/EditAlbum';
+import EditArtist from './pages/editPages/EditArtist';
+import EditTrack from './pages/editPages/EditTrack';
 
 const App = () => {
 	const [searchTerm, setSearchTerm] = useState('');
