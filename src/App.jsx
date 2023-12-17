@@ -6,19 +6,24 @@ import Navbar from './components/Navbar';
 import NewRecord from './pages/NewRecord';
 
 import SearchResults from './pages/searchResults';
-import SearchBar from './components/SearchBarComponent';‚
+import SearchBar from './components/SearchBarComponent';
 import EditAlbum from './pages/editpages/EditAlbum';
 import EditArtist from './pages/editpages/EditArtist';
 import EditTrack from './pages/editpages/EditTrack';
+import AlbumResult from './components/AlbumResult';
 
 const App = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [path, setPath] = useState({
-		album: false,‚
+		album: false,
 		artist: false,
 		track: false,
 		genre: false,
 	});
+
+	const formatReleaseYear = (dateString) => new Date(dateString).getFullYear();
+
+	//Add another AlbumResult component route for /album/id
 
 	const handleSearch = (searchTerm) => {
 		setSearchTerm(searchTerm.term);
