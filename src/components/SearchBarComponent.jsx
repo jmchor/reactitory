@@ -5,14 +5,21 @@ function SearchBar({ onSearch }) {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchOptions, setSearchOptions] = useState({
 		searchAlbum: false,
-		searchArtist: false,
+		searchArtist: true,
 		searchTrack: false,
 		searchGenre: false,
 	});
 
 	const navigate = useNavigate();
 
+	const generateUniqueId = () => {
+		return Date.now().toString(36) + Math.random().toString(36).substr(2);
+	};
+
 	const handleSearch = () => {
+		// Generate a unique ID for the search process
+		const searchId = generateUniqueId();
+
 		// Split the searchTerm by commas
 		const queries = searchTerm.split('AND').map((query) => query.trim());
 
@@ -27,18 +34,12 @@ function SearchBar({ onSearch }) {
 			},
 		};
 
-		console.log(query);
-
-		// Call the onSearch callback with the constructed query
-		onSearch(query);
+		// Call the onSearch callback with the constructed query and the search ID
+		onSearch({ ...query, searchId });
 		setSearchTerm('');
 
-		// Update the URL based on the number of query items
-		if (queries.length === 1) {
-			navigate(`/search/${encodeURIComponent(queries[0])}`);
-		} else if (queries.length > 1) {
-			navigate(`/search/multiple`);
-		}
+		// Update the URL with the search ID
+		navigate(`/search/${encodeURIComponent(queries.join('-'))}/${searchId}`);
 	};
 
 	return (
@@ -48,7 +49,7 @@ function SearchBar({ onSearch }) {
 					<input
 						className='search-input'
 						type='text'
-						placeholder='Search...'
+						placeholder='artist AND track, album, artist, all...'
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
