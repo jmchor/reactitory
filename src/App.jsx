@@ -10,7 +10,9 @@ import SearchBar from './components/SearchBarComponent';
 import EditAlbum from './pages/editpages/EditAlbum';
 import EditArtist from './pages/editpages/EditArtist';
 import EditTrack from './pages/editpages/EditTrack';
-import AlbumResult from './components/AlbumResult';
+import ModifiedAlbumResult from './components/ModifiedAlbumResult';
+import ModifiedArtistResult from './components/ModifiedArtistResult';
+import ModifiedTrackResults from './components/ModifiedTrackResults';
 
 const App = () => {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -20,10 +22,18 @@ const App = () => {
 		track: false,
 		genre: false,
 	});
+	const [modal, setModal] = useState({ open: false, selectedImage: '' });
+	const handleOpenModal = (imageUrl) => {
+		setModal({ open: true, selectedImage: imageUrl });
+	};
+
+	const handleCloseModal = () => {
+		setModal({ open: false, selectedImage: '' });
+	};
 
 	const formatReleaseYear = (dateString) => new Date(dateString).getFullYear();
 
-	//Add another AlbumResult component route for /album/id
+	const itemsPerPage = 5;
 
 	const handleSearch = (searchTerm) => {
 		setSearchTerm(searchTerm.term);
@@ -39,7 +49,8 @@ const App = () => {
 	const location = useLocation();
 	const isSearchResultsPage =
 		(location.pathname.startsWith('/search/') && location.pathname !== '/search/:query') ||
-		location.pathname === '/new-records';
+		location.pathname === '/new-records' ||
+		location.pathname.startsWith('/album/');
 
 	return (
 		<div className='App'>
@@ -53,7 +64,36 @@ const App = () => {
 					<Route path='/edit-artist/:id' element={<EditArtist />} />
 					<Route path='/edit-album/:id' element={<EditAlbum />} />
 					<Route path='/edit/track/:id' element={<EditTrack />} />
-					<Route path='/search/:query' element={<SearchResults searchTerm={searchTerm} path={path} />} />
+
+					<Route
+						path='/search/:query/:searchId'
+						element={
+							<SearchResults
+								searchTerm={searchTerm}
+								path={path}
+								formatReleaseYear={formatReleaseYear}
+								handleCloseModal={handleCloseModal}
+								handleOpenModal={handleOpenModal}
+								modalOpen={modal.open}
+								selectedImage={modal.selectedImage}
+								itemsPerPage={itemsPerPage}
+							/>
+						}
+					/>
+					<Route path='/album/:albumid' element={<ModifiedAlbumResult formatReleaseYear={formatReleaseYear} />}></Route>
+					<Route
+						path='/artist/:artist_id'
+						element={
+							<ModifiedArtistResult
+								handleCloseModal={handleCloseModal}
+								handleOpenModal={handleOpenModal}
+								modalOpen={modal.open}
+								selectedImage={modal.selectedImage}
+								itemsPerPage={itemsPerPage}
+							/>
+						}
+					></Route>
+					<Route path='/track/:track_id' element={<ModifiedTrackResults />}></Route>
 				</Routes>
 			</div>
 		</div>
