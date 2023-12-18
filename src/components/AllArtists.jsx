@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 
 function AllArtists({
@@ -52,7 +52,9 @@ function AllArtists({
 								<tbody>
 									{currentArtists.map((artist) => (
 										<tr key={artist.artist_id}>
-											<td>{artist.artist}</td>
+											<td>
+												<a href={`/artist/${artist.artist_id}`}>{artist.artist}</a>
+											</td>
 											<td>
 												<img
 													src={artist.image}

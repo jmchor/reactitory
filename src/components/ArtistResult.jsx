@@ -80,7 +80,7 @@ function ArtistResult({
 				<div className='table-container'>
 					<div className='albums-table'>
 						<div className='headline-container'>
-							{totalPages > 1 && (
+							{totalPages >= 1 && (
 								<div id='pagination'>
 									<button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
 										&lArr;
@@ -93,7 +93,7 @@ function ArtistResult({
 							)}
 							<div className='backdrop-smaller'></div>
 						</div>
-						{Array.isArray(allAlbums) && allAlbums.length > 0 ? (
+						{(Array.isArray(allAlbums) && allAlbums.length > 0) || totalPages > 1 ? (
 							<>
 								<table>
 									<thead>
@@ -106,7 +106,9 @@ function ArtistResult({
 									<tbody>
 										{currentAlbums.map((album) => (
 											<tr key={album.albumid}>
-												<td>{album.albumName}</td>
+												<td>
+													<a href={`/album/${album.albumid}`}>{album.albumName}</a>
+												</td>
 												<td>
 													<img
 														src={album.image}
