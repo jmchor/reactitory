@@ -485,3 +485,10 @@ nav ul li a {
 .headline-container-home .backdrop-big {
 	padding-left: 290px;
 }
+
+.yt-button {
+	padding: 11px;
+	border: 1px solid black;
+	border-radius: 0%;
+	background-color: #fed507;
+}
