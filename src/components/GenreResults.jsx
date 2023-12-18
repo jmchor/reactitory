@@ -11,7 +11,9 @@ function GenreResults({ genres, searchTerm }) {
 					{genres.map((genre) => (
 						<li key={genre.artist_id} className='genre-item'>
 							<div className='headline-container'>
-								<p>{genre.artist}</p>
+								<p>
+									<a href={`/artist/${genre.artist_id}`}>{genre.artist}</a>
+								</p>
 								<div className='backdrop-genres'></div>
 							</div>
 						</li>
