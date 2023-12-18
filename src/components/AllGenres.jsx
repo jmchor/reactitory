@@ -1,4 +1,7 @@
-function AllGenres({ genres, searchTerm }) {
+function AllGenres({ genres }) {
+	// Use Set to filter out duplicate genres
+	let uniqueGenres = [...new Set(genres)];
+
 	return (
 		<>
 			<div className='headline-container'>
@@ -6,9 +9,9 @@ function AllGenres({ genres, searchTerm }) {
 				<div className='backdrop-smaller'></div>
 			</div>
 
-			{Array.isArray(genres) && genres.length > 0 ? (
+			{Array.isArray(uniqueGenres) && uniqueGenres.length > 0 ? (
 				<ul className='genres-table'>
-					{genres.map((genre) => (
+					{uniqueGenres.map((genre) => (
 						<li key={genre} className='genre-item'>
 							<div className='headline-container'>
 								<p>{genre}</p>
@@ -18,10 +21,7 @@ function AllGenres({ genres, searchTerm }) {
 					))}
 				</ul>
 			) : (
-				<p>
-					{searchTerm} genre
-					{searchTerm.endsWith('s') ? '' : 's'}
-				</p>
+				<p>Nothing found</p>
 			)}
 		</>
 	);
