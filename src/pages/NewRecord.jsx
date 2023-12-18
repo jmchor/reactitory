@@ -9,6 +9,7 @@ function NewRecord() {
 	const [fetchedResults, setFetchedResults] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+	const [artistId, setArtistId] = useState({});
 	const navigate = useNavigate();
 
 	const loadingMessages = [
@@ -37,7 +38,8 @@ function NewRecord() {
 	const submitRecord = async (name) => {
 		try {
 			const res = await axios.post(`${SERVER}/catchall/${name}`, name);
-			console.log(res);
+			console.log(res.data.artist.artist_id);
+			setArtistId(res.data.artist.artist_id);
 			setFetchedResults(true);
 		} catch (err) {
 			console.error(err);
@@ -49,7 +51,7 @@ function NewRecord() {
 			// Redirect to the search page with the provided name
 
 			setTimeout(() => {
-				navigate(`/`);
+				navigate(`/artist/${artistId}`);
 				setFetchedResults(false);
 				setIsLoading(false);
 			}, 2000);
