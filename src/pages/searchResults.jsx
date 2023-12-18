@@ -9,35 +9,33 @@ import AllGenres from '../components/AllGenres';
 import TrackResults from '../components/TrackResults';
 const SERVER = import.meta.env.VITE_API_URL;
 
-function SearchResults(query) {
-	const [artistData, setArtistData] = useState({});
+function SearchResults({
+	searchTerm,
+	path,
+	formatReleaseYear,
+	handleCloseModal,
+	handleOpenModal,
+	modalOpen,
+	selectedImage,
+	itemsPerPage,
+}) {
 	const [albumData, setAlbumData] = useState({});
-	const [trackData, setTrackData] = useState({});
+	const [tracksData, setTracksData] = useState([]);
 	const [genres, setGenres] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [currentItems, setCurrentItems] = useState([]);
 	const [allItems, setAllItems] = useState([]);
 	const [errorMessage, setErrorMessage] = useState('');
-	const [modal, setModal] = useState({ open: false, selectedImage: '' });
 
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { editMessage } = location.state || {};
-	const { searchTerm, path } = query;
-
-	console.log('QUERY', query);
-
-	const handleOpenModal = (imageUrl) => {
-		setModal({ open: true, selectedImage: imageUrl });
+	const wait = () => {
+		setTimeout(() => {
+			navigate('/');
+			setErrorMessage('');
+		}, 3000);
 	};
-
-	const handleCloseModal = () => {
-		setModal({ open: false, selectedImage: '' });
-	};
-
-	const formatReleaseYear = (dateString) => new Date(dateString).getFullYear();
-
-	const itemsPerPage = 5;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -47,83 +45,80 @@ function SearchResults(query) {
 				if (searchTerm === '' && path === 'genre') {
 					res = await axios.get(`${SERVER}/search/${path}/all`);
 					setGenres([...new Set(res.data.response)]);
-				} else if ((searchTerm === 'all' && path === 'artist') || (searchTerm !== 'all' && path === 'artist')) {
-					res = await axios.get(
-						`${SERVER}/search/${path}/${searchTerm === 'all' ? 'all' : encodeURIComponent(searchTerm)}/albums`
-					);
-
-					if (res.data.success) {
-						setArtistData(res.data.response);
-						setAllItems(res.data.response.albums);
-						setCurrentItems(res.data.response.albums.slice(0, itemsPerPage));
-					} else {
-						console.log(res.data.message);
-						setErrorMessage(res.data.message);
-
-						setTimeout(() => {
-							navigate('/');
-							setErrorMessage('');
-						}, 3000);
-					}
-				} else if (path === 'track' && searchTerm.length === 2) {
-					// Case where the path is "tracks" and the searchTerm has two items
-					const [query1, query2] = searchTerm;
-
-					res = await axios.get(`${SERVER}/search/${path}`, {
-						params: {
-							query1: encodeURIComponent(query1),
-							query2: encodeURIComponent(query2),
-						},
-					});
-
-					if (res.data.success) {
-						setTrackData(res.data.response);
-					} else {
-						console.log(res.data.message);
-						setErrorMessage(res.data.message);
-
-						setTimeout(() => {
-							navigate('/');
-							setErrorMessage('');
-						}, 3000);
-					}
-				} else if (path === 'album' && searchTerm.length === 2) {
-					// Case where the path is "albums" and the searchTerm has two items
-					const [query1, query2] = searchTerm;
-
-					res = await axios.get(`${SERVER}/search/${path}/with-artist`, {
-						params: {
-							query1: encodeURIComponent(query1),
-							query2: encodeURIComponent(query2),
-						},
-					});
-
-					if (res.data.success) {
-						setAlbumData(res.data.response);
-					} else {
-						console.log(res.data.message);
-						setErrorMessage(res.data.message);
-
-						setTimeout(() => {
-							navigate('/');
-							setErrorMessage('');
-						}, 3000);
-					}
 				} else {
-					res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
+					switch (path) {
+						case 'artist':
+							const artistSearchTerm = searchTerm[0] === 'all' ? 'all' : encodeURIComponent(searchTerm[0]);
+							res = await axios.get(`${SERVER}/search/${path}/${artistSearchTerm}`);
 
-					if ((path === 'album' || path === 'track') && res.data.success) {
-						path === 'album' ? setAlbumData(res.data.response) : setTrackData(res.data.response);
-					} else if ((searchTerm === 'all' || path === 'genre') && res.data.success) {
-						setGenres(res.data.response);
-					} else {
-						console.log(res.data.message);
-						setErrorMessage(res.data.message);
+							if (searchTerm[0] !== 'all' && res.data.success) {
+								navigate(`/artist/${res.data.response.artist_id}`);
+							} else if (searchTerm[0] === 'all' && res.data.success) {
+								setAllItems(res.data.response);
+								setCurrentItems(res.data.response.slice(0, itemsPerPage));
+							} else {
+								console.log(res.data.message);
+								setErrorMessage(res.data.message);
+								wait();
+							}
+							break;
 
-						setTimeout(() => {
-							navigate('/');
-							setErrorMessage('');
-						}, 3000);
+						case 'track':
+							if (searchTerm.length === 2) {
+								const [query1, query2] = searchTerm;
+								res = await axios.get(`${SERVER}/search/${path}`, {
+									params: {
+										query1: encodeURIComponent(query1),
+										query2: encodeURIComponent(query2),
+									},
+								});
+
+								if (res.data.success) {
+									setTracksData(res.data.response);
+								} else {
+									console.log(res.data.message);
+									setErrorMessage(res.data.message);
+									wait();
+								}
+							}
+							break;
+
+						case 'album':
+							if (searchTerm.length === 2) {
+								const [query1, query2] = searchTerm;
+
+								res = await axios.get(`${SERVER}/search/${path}/with-artist`, {
+									params: {
+										query1: encodeURIComponent(query1),
+										query2: encodeURIComponent(query2),
+									},
+								});
+
+								if (res.data.success) {
+									setAlbumData(res.data.response);
+								} else {
+									console.log(res.data.message);
+									setErrorMessage(res.data.message);
+									wait();
+								}
+							} else if (searchTerm.length < 2) {
+								res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
+								setAlbumData(res.data.response);
+								navigate(`/album/${res.data.response.albumid}`);
+							}
+							break;
+
+						default:
+							console.log('HERE');
+							res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
+
+							if ((searchTerm === 'all' || path === 'genre') && res.data.success) {
+								setGenres(res.data.response);
+							} else {
+								console.log(res.data.message);
+								setErrorMessage(res.data.message);
+								wait();
+							}
 					}
 				}
 			} catch (error) {
@@ -133,8 +128,6 @@ function SearchResults(query) {
 
 		fetchData();
 	}, [searchTerm, path, navigate]);
-
-	console.log('ALBUMDATA', albumData);
 
 	const handlePageChange = (pageNumber) => {
 		const indexOfLastItem = pageNumber * itemsPerPage;
@@ -147,33 +140,18 @@ function SearchResults(query) {
 
 	const totalPages = Math.ceil(allItems.length / itemsPerPage);
 
-	if (genres || artistData || albumData || trackData) {
+	if (genres || albumData || tracksData) {
 		return (
 			<div className='results'>
 				{editMessage && <p className='message'>{editMessage}</p>}
 
 				{!errorMessage ? (
 					<div>
-						{path === 'artist' && artistData && searchTerm !== 'all' && (
-							<ArtistResult
-								artist={artistData}
-								allAlbums={allItems}
-								currentAlbums={currentItems}
-								totalPages={totalPages}
-								currentPage={currentPage}
-								handlePageChange={handlePageChange}
-								modalOpen={modal.open}
-								selectedImage={modal.selectedImage}
-								handleOpenModal={handleOpenModal}
-								handleCloseModal={handleCloseModal}
-							/>
-						)}
-
 						{path === 'album' && albumData && <AlbumResult album={albumData} formatReleaseYear={formatReleaseYear} />}
 
-						{path === 'track' && trackData && <TrackResults track={trackData} />}
+						{path === 'track' && tracksData && <TrackResults tracks={tracksData} />}
 
-						{path === 'genre' && genres && searchTerm === 'all' && (
+						{path === 'genre' && genres && searchTerm[0] === 'all' && (
 							<AllGenres genres={genres} searchTerm={searchTerm} />
 						)}
 
@@ -181,15 +159,15 @@ function SearchResults(query) {
 							<GenreResults genres={genres} searchTerm={searchTerm} />
 						)}
 
-						{path === 'artist' && allItems && searchTerm === 'all' && (
+						{path === 'artist' && allItems && searchTerm[0] === 'all' && (
 							<AllArtists
 								allArtists={allItems}
 								currentArtists={currentItems}
 								totalPages={totalPages}
 								currentPage={currentPage}
 								handlePageChange={handlePageChange}
-								modalOpen={modal.open}
-								selectedImage={modal.selectedImage}
+								modalOpen={modalOpen}
+								selectedImage={selectedImage}
 								handleOpenModal={handleOpenModal}
 								handleCloseModal={handleCloseModal}
 							/>
