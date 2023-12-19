@@ -85,36 +85,28 @@ function NewRecord() {
 						</h4>
 						<div className='backdrop'></div>
 					</div>
-				</div>
-
-				<div className='search-area'>
-					<div className='search-bar-container'>
-						<input
-							className='search-input'
-							type='text'
-							id='name'
-							name='name'
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-						/>
-						<button className='search-button' onClick={handleSubmit}>
-							Create
-						</button>
-					</div>
-
-					{!fetchedResults && isLoading && (
-						<div className='loading-box'>
-							<RingLoader color='#e4cf32' />
-
-							<p>{loadingMessages[loadingMessageIndex]}</p>
+					<div className='search-area'>
+						<div className='search-bar-container'>
+							<input
+								className='search-input'
+								type='text'
+								id='name'
+								name='name'
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+							/>
+							<button className='search-button' onClick={handleSubmit}>
+								Create
+							</button>
 						</div>
-					)}
 
-					<div className='headline-container'>
-						<p>
-							Or you can go back to the <a href='/'>home page</a>
-						</p>
-						<div className='backdrop-smaller'></div>
+						{!fetchedResults && isLoading && (
+							<div className='loading-box'>
+								<RingLoader color='#e4cf32' />
+
+								<p>{loadingMessages[loadingMessageIndex]}</p>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
