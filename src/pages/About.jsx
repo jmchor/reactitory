@@ -2,12 +2,8 @@
 function About() {
 	return (
 		<div className='about-container'>
-			<div className='headline-container'>
-				<h1>Welcome and thank you for checking out Auditory!</h1>
-				<div className='backdrop'></div>
-			</div>
-
 			<div className='about-text'>
+				<h1>Welcome and thank you for checking out Auditory!</h1>
 				<h3>What is this?</h3>
 				<p>
 					Auditory is yet another "scratch my own itch" project, as developers with a job that doesn't involve
@@ -23,7 +19,6 @@ function About() {
 					<li>I need to practice with PostgreSQL</li>
 					<li>the Spotify API looks fun!</li>
 				</ul>
-				<p>&nbsp;</p>
 				<p>
 					And here we are. Written in <strong>Node.js</strong>, <strong>React</strong>, <strong>Express</strong> and{' '}
 					<strong>PostgreSQL</strong>, Auditory is a database application that will fetch data and store it in a
@@ -48,6 +43,13 @@ function About() {
 						Freepik
 					</a>
 				</p>
+				<p>Visit the repos here</p>
+				<a href='https://www.github.com/jmchor/reactitory' target='_blank' rel='noreferrer'>
+					Frontend
+				</a>{' '}
+				<a href='https://www.github.com/jmchor/auditory' target='_blank' rel='noreferrer'>
+					Backend
+				</a>
 			</div>
 		</div>
 	);
