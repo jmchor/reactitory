@@ -1,53 +1,19 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-const SERVER = import.meta.env.VITE_API_URL;
+import { useNavigate } from 'react-router-dom';
+
 import Modal from './Modal';
 
-function ModifiedArtistResult({ handleCloseModal, handleOpenModal, modalOpen, selectedImage, itemsPerPage }) {
-	const [artist, setArtist] = useState({});
-	const [allAlbums, setAllAlbums] = useState([]);
-	const [currentAlbums, setCurrentAlbums] = useState([]);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [genres, setGenres] = useState([]);
-	const [onHarddrive, setOnHarddrive] = useState(false);
-	const [image, setImage] = useState({});
-	const [success, setSuccess] = useState(false);
-
-	const { artist_id } = useParams();
-
-	useEffect(() => {
-		const fetchAlbumData = async () => {
-			try {
-				const res = await axios.get(`${SERVER}/artists/${artist_id}`);
-				setSuccess(true);
-				setArtist(res.data.response.artist);
-				setAllAlbums(res.data.response.albums);
-				setCurrentAlbums(res.data.response.albums.slice(0, itemsPerPage));
-				setGenres(res.data.response.genres);
-				setOnHarddrive(res.data.response.harddrive);
-				setImage(res.data.response.image);
-				setSuccess(true);
-			} catch (error) {
-				console.error(error);
-			}
-		};
-
-		fetchAlbumData();
-	}, [artist_id]);
-
-	console.log('HERE');
-	const handlePageChange = (pageNumber) => {
-		const indexOfLastItem = pageNumber * itemsPerPage;
-		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-		const itemsToDisplay = allAlbums.slice(indexOfFirstItem, indexOfLastItem);
-
-		setCurrentAlbums(itemsToDisplay);
-		setCurrentPage(pageNumber);
-	};
-
-	const totalPages = Math.ceil(allAlbums.length / itemsPerPage);
-
+function ModifiedArtistResult({
+	handleCloseModal,
+	handleOpenModal,
+	modalOpen,
+	selectedImage,
+	allItems,
+	currentItems,
+	currentPage,
+	handlePageChange,
+	totalPages,
+	artist,
+}) {
 	const navigate = useNavigate();
 
 	const handleEditArtist = (artistId) => {
@@ -58,59 +24,60 @@ function ModifiedArtistResult({ handleCloseModal, handleOpenModal, modalOpen, se
 		navigate(`/edit-album/${albumid}`, { state: { album } });
 	};
 
-	if (success) {
+	if (artist) {
 		return (
 			<>
 				<div className='container'>
-					<div className='headline-container'>
-						<h1>{artist}</h1> <div className='backdrop'></div>
-					</div>
-					<div className='artist-content'>
-						<div className='page-header'>
-							<img className='artist-image' src={image} alt='' />
-							{onHarddrive ? (
-								<div className='headline-container'>
-									<div className='harddrive'>
-										<p>on harddrive</p>
-										<div className='checkmark'>&#10004;</div>
-										<button className='edit-button' onClick={() => handleEditArtist(artist_id)}>
-											&#9998;
-										</button>
-									</div>
-									<div className='backdrop-smaller'></div>
-								</div>
-							) : (
-								<div className='headline-container'>
-									<div className='harddrive'>
-										<p>on harddrive</p>
-										<div className='crossmark'>&#10008;</div>
-										<button className='edit-button' onClick={() => handleEditArtist(artist_id)}>
-											&#9998;
-										</button>
-									</div>
-									<div className='backdrop-smaller'></div>
-								</div>
-							)}
+					<div className='border-container'>
+						<div className='headline-container'>
+							<h1>{artist.artist}</h1> <div className='backdrop'></div>
 						</div>
-						<div className='genres-list'>
-							<div className='headline-container'>
-								<h2>Genres</h2>
-								<div className='backdrop-smaller'></div>
+						<div className='artist-content'>
+							<div className='page-header'>
+								<img className='artist-image' src={artist.image} alt='' />
+								{artist.harddrive ? (
+									<div className='headline-container'>
+										<div className='harddrive'>
+											<p>on harddrive</p>
+											<div className='checkmark'>&#10004;</div>
+											<button className='edit-button' onClick={() => handleEditArtist(artist.artist_id)}>
+												&#9998;
+											</button>
+										</div>
+										<div className='backdrop-smaller'></div>
+									</div>
+								) : (
+									<div className='headline-container'>
+										<div className='harddrive'>
+											<p>on harddrive</p>
+											<div className='crossmark'>&#10008;</div>
+											<button className='edit-button' onClick={() => handleEditArtist(artist.artist_id)}>
+												&#9998;
+											</button>
+										</div>
+										<div className='backdrop-smaller'></div>
+									</div>
+								)}
 							</div>
-							{Array.isArray(genres) && genres.length > 0 ? (
-								<ul className='genres-table'>
-									{genres.map((genre) => (
-										<li key={genre} className='genre-item'>
-											<div className='headline-container'>
+							<div className='genres-list'>
+								<div className='headline-container'>
+									<div className='headline-box'>
+										<h2>Genres</h2>
+									</div>
+									<div className='backdrop-smaller'></div>
+								</div>
+								{Array.isArray(artist.genres) && artist.genres.length > 0 ? (
+									<ul className='genres-table'>
+										{artist.genres.map((genre) => (
+											<li key={genre} className='genre-item'>
 												<p>{genre}</p>
-												<div className='backdrop-smaller'></div>
-											</div>
-										</li>
-									))}
-								</ul>
-							) : (
-								<p>{genres ? 'Loading genres...' : 'No genres available for this artist.'}</p>
-							)}
+											</li>
+										))}
+									</ul>
+								) : (
+									<p>{artist.genres ? 'Loading genres...' : 'No genres available for this artist.'}</p>
+								)}
+							</div>
 						</div>
 					</div>
 					<div className='table-container'>
@@ -129,7 +96,7 @@ function ModifiedArtistResult({ handleCloseModal, handleOpenModal, modalOpen, se
 								)}
 								<div className='backdrop-smaller'></div>
 							</div>
-							{(Array.isArray(allAlbums) && allAlbums.length > 0) || totalPages > 1 ? (
+							{(Array.isArray(allItems) && allItems.length > 0) || totalPages > 1 ? (
 								<>
 									<table>
 										<thead>
@@ -140,7 +107,7 @@ function ModifiedArtistResult({ handleCloseModal, handleOpenModal, modalOpen, se
 											</tr>
 										</thead>
 										<tbody>
-											{currentAlbums.map((album) => (
+											{currentItems.map((album) => (
 												<tr key={album.albumid}>
 													<td>
 														<a href={`/album/${album.albumid}`}>{album.albumName}</a>
@@ -176,7 +143,7 @@ function ModifiedArtistResult({ handleCloseModal, handleOpenModal, modalOpen, se
 									</table>
 								</>
 							) : (
-								<p>{allAlbums.length === 0 ? 'No albums available for this artist.' : 'Loading albums...'}</p>
+								<p>{allItems.length === 0 ? 'No albums available for this artist.' : 'Loading albums...'}</p>
 							)}
 						</div>
 						<Modal isOpen={modalOpen} imageUrl={selectedImage} onClose={handleCloseModal} />

@@ -66,7 +66,9 @@ function AlbumResult({ album, formatReleaseYear }) {
 								<tbody>
 									{album.tracklist.map((track) => (
 										<tr key={track.track_id}>
-											<td>{track.track}</td>
+											<td>
+												<a href={`/track/${track.track_id}`}>{track.track}</a>
+											</td>
 											<td>{track.duration}</td>
 											<td>{track.youtube_url || ' --- '}</td>
 										</tr>
