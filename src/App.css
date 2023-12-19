@@ -211,7 +211,10 @@ td img {
 	word-wrap: break-word;
 }
 
-.results {
+.genres-table#artists {
+	margin-top: 0px;
+}
+5 .results {
 	height: 100%;
 }
 
@@ -552,14 +555,10 @@ a {
 	display: flex;
 	flex-direction: column;
 	border: 1px solid #fed507;
+	height: fit-content;
+	margin-top: -40px;
 }
 
-.about-text {
-	position: relative;
-	top: -230px;
-}
-
-.about-container > .headline-container {
-	position: relative;
-	top: -100px;
+#content .about-container h1 {
+	margin: 0;
 }
