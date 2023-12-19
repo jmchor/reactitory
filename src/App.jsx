@@ -71,10 +71,7 @@ const App = () => {
 	};
 
 	const location = useLocation();
-	const isSearchResultsPage =
-		(location.pathname.startsWith('/search/') && location.pathname !== '/search/:query') ||
-		location.pathname === '/new-records' ||
-		location.pathname === '/about';
+	const isSearchResultsPage = location.pathname === '/new-records' || location.pathname === '/about';
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -91,6 +88,7 @@ const App = () => {
 							res = await axios.get(`${SERVER}/search/${path}/${artistSearchTerm}`);
 
 							if (searchTerm[0] !== 'all' && res.data.success) {
+								console.log('THISE ROUTE');
 								res = await axios.get(`${SERVER}/search/${path}/${artistSearchTerm}/albums`);
 								setArtist(res.data.response);
 								setAllItems(res.data.response.albums);
@@ -145,6 +143,7 @@ const App = () => {
 									wait();
 								}
 							} else if (searchTerm.length < 2) {
+								console.log('HERE');
 								res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
 								setAlbumData(res.data.response);
 								navigate(`/album/${res.data.response.albumid}`);
@@ -152,7 +151,6 @@ const App = () => {
 							break;
 
 						default:
-							console.log('HERE');
 							res = await axios.get(`${SERVER}/search/${path}/${encodeURIComponent(searchTerm)}`);
 
 							if ((searchTerm === 'all' || path === 'genre') && res.data.success) {
