@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from 'redaxios';
 const SERVER = import.meta.env.VITE_API_URL;
 
 function ModifiedTrackResults() {

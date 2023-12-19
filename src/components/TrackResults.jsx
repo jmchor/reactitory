@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'redaxios';
 const SERVER = import.meta.env.VITE_API_URL;
 
 function TrackResults({ tracks }) {

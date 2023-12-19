@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import axios from 'axios';
+import axios from 'redaxios';
 const SERVER = import.meta.env.VITE_API_URL;
 
 function EditAlbum() {
