@@ -7,6 +7,28 @@ function AlbumResult({ album, formatReleaseYear }) {
 		navigate(`/edit-album/${albumId}`, { state: { album } });
 	};
 
+	const handleButtonClick = async (track_id) => {
+		try {
+			// Make a POST request to update the YouTube URL for the specific track
+			const response = await axios.post(`${SERVER}/ytupdate/single-track/${track_id}`);
+
+			if (response.data.success) {
+				console.log('YouTube URL updated for track:', response.data.track);
+
+				setTimeout(() => {
+					// Go back in history
+					navigate(`/album/${track.albumid}`);
+				}, 1000);
+
+				// You can add any further logic here, such as updating the state
+			} else {
+				console.error('Failed to update YouTube URL:', response.data.error);
+			}
+		} catch (error) {
+			console.error('Error updating YouTube URL:', error.message);
+		}
+	};
+
 	return (
 		<div className='artist-content'>
 			<>

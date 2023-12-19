@@ -73,6 +73,15 @@ const App = () => {
 	const location = useLocation();
 	const isSearchResultsPage = location.pathname === '/new-records' || location.pathname === '/about';
 
+	const handlePageChange = (pageNumber) => {
+		const indexOfLastItem = pageNumber * itemsPerPage;
+		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+		const itemsToDisplay = allItems.slice(indexOfFirstItem, indexOfLastItem);
+
+		setCurrentItems(itemsToDisplay);
+		setCurrentPage(pageNumber);
+	};
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -88,7 +97,6 @@ const App = () => {
 							res = await axios.get(`${SERVER}/search/${path}/${artistSearchTerm}`);
 
 							if (searchTerm[0] !== 'all' && res.data.success) {
-								console.log('THISE ROUTE');
 								res = await axios.get(`${SERVER}/search/${path}/${artistSearchTerm}/albums`);
 								setArtist(res.data.response);
 								setAllItems(res.data.response.albums);
@@ -169,15 +177,6 @@ const App = () => {
 
 		fetchData();
 	}, [searchTerm, path]);
-
-	const handlePageChange = (pageNumber) => {
-		const indexOfLastItem = pageNumber * itemsPerPage;
-		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-		const itemsToDisplay = allItems.slice(indexOfFirstItem, indexOfLastItem);
-
-		setCurrentItems(itemsToDisplay);
-		setCurrentPage(pageNumber);
-	};
 
 	const totalPages = Math.ceil(allItems.length / itemsPerPage);
 

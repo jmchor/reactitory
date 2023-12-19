@@ -10,10 +10,9 @@ function ModifiedArtistResult({
 	handleOpenModal,
 	modalOpen,
 	selectedImage,
+	currentPage: propCurrentPage,
 	allItems: propAllItems,
 	currentItems: propCurrentItems,
-	currentPage,
-	handlePageChange,
 	totalPages: propTotalPages,
 	artist: propArtist,
 	itemsPerPage,
@@ -22,10 +21,9 @@ function ModifiedArtistResult({
 	const [allItems, setAllItems] = useState(propAllItems);
 	const [currentItems, setCurrentItems] = useState(propCurrentItems);
 	const [totalPages, setTotalPages] = useState(propTotalPages);
+	const [currentPage, setCurrentPage] = useState(propCurrentPage);
 	const navigate = useNavigate();
 	const { artist_id: routeArtistId } = useParams();
-
-	console.log(artist);
 
 	const handleEditArtist = (artistId) => {
 		navigate(`/edit-artist/${artistId}`, { state: { artist } });
@@ -33,6 +31,14 @@ function ModifiedArtistResult({
 
 	const handleEditAlbum = (albumid, album) => {
 		navigate(`/edit-album/${albumid}`, { state: { album } });
+	};
+	const handlePageChange = (pageNumber) => {
+		const indexOfLastItem = pageNumber * itemsPerPage;
+		const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+		const itemsToDisplay = allItems.slice(indexOfFirstItem, indexOfLastItem);
+
+		setCurrentItems(itemsToDisplay);
+		setCurrentPage(pageNumber);
 	};
 
 	useEffect(() => {
@@ -53,6 +59,8 @@ function ModifiedArtistResult({
 			fetchArtistData();
 		}
 	}, [routeArtistId, artist]);
+
+	console.log(currentPage);
 
 	if (artist) {
 		return (
