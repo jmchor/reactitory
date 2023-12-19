@@ -6,6 +6,10 @@ This is the frontend magic for the [auditory backend magic](https://github.com/j
 <img src="public/reactitory.png" alt="the auditory fron page" width="500px"/>
 </p>
 
+For a demo of the app, click [here](https://auditory.onrender.com/).
+
+!! Important notice: since I'm hosting on a Render free tier, startup for the backend takes some time every time.
+
 ## Features
 
 All of the routes are getting called - and now you have a nice frontend UI for it!
@@ -31,9 +35,9 @@ Put in a search term, select a search option, and see what you get!
 ## Dependencies
 
 - React
-- Axios
+- axios from Redaxios
 
-## How to Run
+## Words of Caution
 
-1. Install dependencies: `npm install`
-2. Run the application: `npm start`
+The "fetch youtube URL for a track" feature is - wonky at best. It's an incredibly simple script - take the artist's name and trackname, throw it to YouTube, and take the first result.
+With distinct titles that works great - at other times, not so much. Just have some fun with it!
