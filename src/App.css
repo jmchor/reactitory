@@ -64,6 +64,8 @@ body {
 #content {
 	margin-top: 60px; /* Adjust as needed based on your navbar's height */
 	height: 100%;
+	display: flex;
+	justify-content: center;
 }
 
 /* Styles for making all pages span the whole screen */
@@ -275,6 +277,7 @@ td img {
 	border-bottom: 1px solid #000;
 	border-radius: 0%;
 	background-color: #fed507;
+	color: #000;
 }
 
 .search-area {
@@ -457,7 +460,6 @@ p {
 .home-screen {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
 }
 
@@ -521,4 +523,32 @@ nav ul li a {
 	border: 1px solid #fed507;
 	border-radius: 10px;
 	background-color: #fed5072d;
+}
+
+/* About */
+
+.about-text > p,
+h2,
+h3,
+a {
+	color: #fed507;
+	font-weight: 900;
+}
+
+#content .about-container {
+	width: 80%;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #fed507;
+}
+
+.about-text {
+	position: relative;
+	top: -230px;
+}
+
+.about-container > .headline-container {
+	position: relative;
+	top: -100px;
 }
