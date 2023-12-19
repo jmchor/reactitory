@@ -5,18 +5,17 @@ function AllGenres({ genres }) {
 	return (
 		<>
 			<div className='headline-container'>
-				<h2>All Genres (like, ALL of them!)</h2>
+				<div className='headline-box'>
+					<h2>Genres</h2>
+				</div>
 				<div className='backdrop-smaller'></div>
 			</div>
 
 			{Array.isArray(uniqueGenres) && uniqueGenres.length > 0 ? (
-				<ul className='genres-table'>
+				<ul className='genres-table' id='artists'>
 					{uniqueGenres.map((genre) => (
 						<li key={genre} className='genre-item'>
-							<div className='headline-container'>
-								<p>{genre}</p>
-								<div className='backdrop-genres'></div>
-							</div>
+							<p>{genre}</p>
 						</li>
 					))}
 				</ul>
