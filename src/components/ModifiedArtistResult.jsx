@@ -88,7 +88,9 @@ function ModifiedArtistResult({
 										<button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
 											&lArr;
 										</button>
-										<h2>Albums</h2>
+										<div className='headline-box'>
+											<h2>Albums</h2>
+										</div>
 										<button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
 											&rArr;
 										</button>

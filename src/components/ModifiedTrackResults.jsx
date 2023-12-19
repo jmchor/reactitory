@@ -48,7 +48,9 @@ function ModifiedTrackResults() {
 		return (
 			<div className='track-container'>
 				<div className='headline-container'>
-					<h2>Track</h2>
+					<div className='headline-box'>
+						<h2>Track</h2>
+					</div>
 					<div className='backdrop-smaller'></div>
 				</div>
 

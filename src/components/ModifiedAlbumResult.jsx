@@ -19,7 +19,9 @@ function ModifiedAlbumResult({ formatReleaseYear, album }) {
 							<div className='backdrop'></div>
 						</div>
 						<div className='headline-container' id='album-artist'>
-							<h3>{album.artist}</h3>
+							<div className='headline-box'>
+								<h3>{album.artist}</h3>
+							</div>
 							<div className='backdrop-smaller'></div>
 						</div>
 						{album.harddrive ? (

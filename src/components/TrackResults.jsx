@@ -28,7 +28,9 @@ function TrackResults({ tracks }) {
 		return (
 			<div className='track-container'>
 				<div className='headline-container'>
-					<h2>Tracks</h2>
+					<div className='headline-box'>
+						<h2>Tracks</h2>
+					</div>
 					<div className='backdrop-smaller'></div>
 				</div>
 

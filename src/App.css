@@ -316,7 +316,12 @@ div.crossmark {
 	justify-content: center;
 }
 
-.headline-container h1,
+.headline-box > h2,
+h3 {
+	color: #242424 !important;
+}
+
+.headline-container > h1,
 h2,
 h3,
 h4,
@@ -357,6 +362,11 @@ p {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+.tracks-table td,
+th {
+	color: #fed507;
 }
 
 .tracks-table#for-tracks {
@@ -514,6 +524,7 @@ nav ul li a {
 	border: 1px solid black;
 	border-radius: 0%;
 	background-color: #fed507;
+	color: black;
 }
 
 .border-container {

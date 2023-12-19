@@ -2,7 +2,7 @@
 import './App.css';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from 'redaxios';
 
 const SERVER = import.meta.env.VITE_API_URL;
 
@@ -74,7 +74,6 @@ const App = () => {
 	const isSearchResultsPage =
 		(location.pathname.startsWith('/search/') && location.pathname !== '/search/:query') ||
 		location.pathname === '/new-records' ||
-		location.pathname.startsWith('/album/') ||
 		location.pathname === '/about';
 
 	useEffect(() => {
