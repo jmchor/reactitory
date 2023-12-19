@@ -170,7 +170,7 @@ const App = () => {
 		};
 
 		fetchData();
-	}, [searchTerm, path, navigate]);
+	}, [searchTerm, path]);
 
 	const handlePageChange = (pageNumber) => {
 		const indexOfLastItem = pageNumber * itemsPerPage;
