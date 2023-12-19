@@ -70,7 +70,17 @@ function AlbumResult({ album, formatReleaseYear }) {
 												<a href={`/track/${track.track_id}`}>{track.track}</a>
 											</td>
 											<td>{track.duration}</td>
-											<td>{track.youtube_url || ' --- '}</td>
+											<td>
+												{track.youtube_url ? (
+													<a href={track.youtube_url} target='_blank' rel='noopener noreferrer'>
+														Watch on YouTube
+													</a>
+												) : (
+													<button className='yt-button' onClick={() => handleButtonClick(track.track_id)}>
+														Add YouTube URL
+													</button>
+												)}
+											</td>
 										</tr>
 									))}
 								</tbody>
