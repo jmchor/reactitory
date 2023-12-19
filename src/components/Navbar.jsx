@@ -1,16 +1,17 @@
+import { Link } from 'react-router-dom';
+
 function Navbar() {
 	return (
 		<nav>
 			<ul>
 				<li>
-					<a href='/'>Home</a>
+					<Link to='/'>Home</Link>
 				</li>
 				<li>
-					<a href='/new-records'>New DB Records</a>
+					<Link to='/new-records'>New DB Records</Link>
 				</li>
-
 				<li>
-					<a href='/about'>About Auditory</a>
+					<Link to='/about'>About Auditory</Link>
 				</li>
 			</ul>
 		</nav>
