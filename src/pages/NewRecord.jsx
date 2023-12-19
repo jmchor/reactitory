@@ -51,13 +51,11 @@ function NewRecord() {
 		if (fetchedResults) {
 			// Redirect to the search page with the provided name
 
-			setTimeout(() => {
-				navigate(`/artist/${artistId}`);
-				setFetchedResults(false);
-				setIsLoading(false);
-			}, 2000);
+			navigate(`/artist/${artistId}`);
+			setFetchedResults(false);
+			setIsLoading(false);
 		}
-	}, [fetchedResults, name, navigate]);
+	}, [artistId, fetchedResults, name, navigate]);
 
 	useEffect(() => {
 		// Set up interval for changing loading messages
