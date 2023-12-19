@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RingLoader } from 'react-spinners';
