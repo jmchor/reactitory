@@ -1,20 +1,31 @@
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'redaxios';
 import Modal from './Modal';
+
+const SERVER = import.meta.env.VITE_API_URL;
 
 function ModifiedArtistResult({
 	handleCloseModal,
 	handleOpenModal,
 	modalOpen,
 	selectedImage,
-	allItems,
-	currentItems,
+	allItems: propAllItems,
+	currentItems: propCurrentItems,
 	currentPage,
 	handlePageChange,
-	totalPages,
-	artist,
+	totalPages: propTotalPages,
+	artist: propArtist,
+	itemsPerPage,
 }) {
+	const [artist, setArtist] = useState(propArtist);
+	const [allItems, setAllItems] = useState(propAllItems);
+	const [currentItems, setCurrentItems] = useState(propCurrentItems);
+	const [totalPages, setTotalPages] = useState(propTotalPages);
 	const navigate = useNavigate();
+	const { artist_id: routeArtistId } = useParams();
+
+	console.log(artist);
 
 	const handleEditArtist = (artistId) => {
 		navigate(`/edit-artist/${artistId}`, { state: { artist } });
@@ -23,6 +34,25 @@ function ModifiedArtistResult({
 	const handleEditAlbum = (albumid, album) => {
 		navigate(`/edit-album/${albumid}`, { state: { album } });
 	};
+
+	useEffect(() => {
+		const fetchArtistData = async () => {
+			try {
+				console.log('HELLO!');
+				const res = await axios.get(`${SERVER}/artists/${routeArtistId}`);
+				setArtist(res.data.response);
+				setAllItems(res.data.response.albums);
+				setCurrentItems(res.data.response.albums.slice(0, itemsPerPage));
+				setTotalPages(Math.ceil(allItems.length / itemsPerPage));
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		if (!artist || artist.artist_id !== routeArtistId || totalPages === 0) {
+			fetchArtistData();
+		}
+	}, [routeArtistId, artist]);
 
 	if (artist) {
 		return (

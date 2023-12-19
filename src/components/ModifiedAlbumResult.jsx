@@ -1,13 +1,33 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'redaxios';
+const SERVER = import.meta.env.VITE_API_URL;
 
-function ModifiedAlbumResult({ formatReleaseYear, album }) {
+function ModifiedAlbumResult({ formatReleaseYear, albumData: propAlbum }) {
 	const navigate = useNavigate();
+	const { albumid: routeAlbumId } = useParams();
+	const [album, setAlbum] = useState(propAlbum);
 
 	const handleEditAlbum = (albumId, album) => {
 		navigate(`/edit-album/${albumId}`, { state: { album } });
 	};
 
-	console.log('NOW HERE', album);
+	useEffect(() => {
+		const fetchAlbumData = async () => {
+			try {
+				if (!album) {
+					const res = await axios.get(`${SERVER}/albums/${routeAlbumId}`);
+					setAlbum(res.data.albumData);
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		if (!album) {
+			fetchAlbumData();
+		}
+	}, [album, routeAlbumId]);
 
 	if (album) {
 		return (
