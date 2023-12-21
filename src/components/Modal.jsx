@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const Modal = ({ isOpen, imageUrl, onClose }) => {
 	return (
 		<>
@@ -13,3 +15,9 @@ const Modal = ({ isOpen, imageUrl, onClose }) => {
 };
 
 export default Modal;
+
+Modal.propTypes = {
+	isOpen: PropTypes.bool.isRequired,
+	imageUrl: PropTypes.string.isRequired,
+	onClose: PropTypes.func.isRequired,
+};

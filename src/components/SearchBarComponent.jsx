@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function SearchBar({ onSearch }) {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -105,3 +106,7 @@ function SearchBar({ onSearch }) {
 }
 
 export default SearchBar;
+
+SearchBar.propTypes = {
+	onSearch: PropTypes.func.isRequired,
+};

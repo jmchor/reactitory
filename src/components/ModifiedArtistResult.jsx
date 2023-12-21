@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'redaxios';
 import Modal from './Modal';
+import PropTypes from 'prop-types';
 
 const SERVER = import.meta.env.VITE_API_URL;
 
@@ -195,3 +196,22 @@ function ModifiedArtistResult({
 }
 
 export default ModifiedArtistResult;
+
+ModifiedArtistResult.propTypes = {
+	handleCloseModal: PropTypes.func,
+	handleOpenModal: PropTypes.func,
+	modalOpen: PropTypes.bool,
+	selectedImage: PropTypes.string,
+	currentPage: PropTypes.number,
+	allItems: PropTypes.array,
+	currentItems: PropTypes.array,
+	totalPages: PropTypes.number,
+	artist: (PropTypes.shape = {
+		artist: PropTypes.string,
+		harddrive: PropTypes.bool,
+		image: PropTypes.string,
+		artist_id: PropTypes.string,
+		gernres: PropTypes.array,
+	}),
+	itemsPerPage: PropTypes.number,
+};
