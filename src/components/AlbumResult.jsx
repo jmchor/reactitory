@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import axios from 'redaxios';
+const SERVER = import.meta.env.VITE_API_URL;
 
 function AlbumResult({ album, formatReleaseYear }) {
 	const navigate = useNavigate();
@@ -17,7 +19,7 @@ function AlbumResult({ album, formatReleaseYear }) {
 
 				setTimeout(() => {
 					// Go back in history
-					navigate(`/album/${track.albumid}`);
+					navigate(`/album/${response.data.track.albumid}`);
 				}, 1000);
 
 				// You can add any further logic here, such as updating the state
